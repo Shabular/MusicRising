@@ -1,0 +1,14 @@
+﻿version: '3.7'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: Database
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - D:\MusicRising\data\db:/data/db
+
+volumes:
+  mongodb_data:
