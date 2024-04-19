@@ -8,11 +8,10 @@ namespace MusicRising.Models;
 
 public class Rating
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set;}
     [Required]
     public string? IdentityUserId { get; set; }
+    
     [ForeignKey("IdentityUserId")]
     public IdentityUser? User { get; set; }
     
@@ -26,4 +25,5 @@ public class Rating
     
     public int Stars { get; set; }
     public string Comment { get; set; }
+    public DateTime Date { get; set;}
 }

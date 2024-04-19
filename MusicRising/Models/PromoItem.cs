@@ -8,8 +8,6 @@ namespace MusicRising.Models;
 
 public class PromoItem
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set;}
 
     [Required]

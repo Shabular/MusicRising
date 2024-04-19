@@ -9,8 +9,6 @@ namespace MusicRising.Models;
 
 public class Venue
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set;}
     // If the user who owns the venue is deleted remove the band
     [Required]

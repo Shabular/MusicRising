@@ -6,8 +6,8 @@ public static class DockerHelper
 {
     public static void StartContainer(string imageName)
     {
-        Console.WriteLine("MongoDB is being started, first runs can take longer.");
-        if (imageName == "MongoDB")
+        Console.WriteLine("MAriaDB is being started, first runs can take longer.");
+        if (imageName == "MariaDB")
         {
             ProcessStartInfo startInfo = new ProcessStartInfo("docker-compose")
             {
@@ -27,7 +27,8 @@ public static class DockerHelper
             process.WaitForExit();
 
             Console.WriteLine(result);
-            Console.WriteLine("MongoDB docker up and running");
+            Console.WriteLine("MariaDB docker up and running, please wait while the database is built");
+            Thread.Sleep(15000); // 15,000 milliseconds = 15 seconds
         }  
     }
         

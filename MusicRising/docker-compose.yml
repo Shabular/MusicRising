@@ -1,14 +1,17 @@
-﻿version: '3.7'
+﻿version: '3.8'
 
 services:
-  mongodb:
-    image: mongo
+  mariadb:
+    image: mariadb:latest
     container_name: Database
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: DevelopmentPassword
     ports:
-      - "27017:27017"
+      - "3306:3306"
     volumes:
-      - D:\MusicRising\data\db:/data/db
+      - D:\MusicRising\data\db:/var/lib/mysql
 
 volumes:
-  mongodb_data:
+  mariadb_data:
+    driver: local

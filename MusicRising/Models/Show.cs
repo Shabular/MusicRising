@@ -10,27 +10,25 @@ namespace MusicRising.Models;
 
 public class Show
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set;}
-    [Required]
-    public string IdentityUserId { get; set;}
-
-    [ForeignKey("IdentityUserId")]
-    public IdentityUser? User { get; set; }
+    
     [Required]
     public string? VenueId { get; set; }
     [ForeignKey("VenueId")]
     public Venue? Venue { get; set; }
     
-    [Required]
     public string? BandID { get; set; }
     [ForeignKey("BandId")]
     public Band? HeadLiner { get; set; }
     
+    [NotMapped]
     public List<Band>? Bands { get; set;}
     public GenreEnum Genre { get; set;}
-    public JSType.Date date { get; set;}
+    public DateTime Date { get; set;}
     public string? PromoLink { get; set;}
+    public double? ShowFee { get; set; }
+    private double BandFee { get; set; }
+    private bool? Payed { get; set; }
     
+
 }
