@@ -10,6 +10,7 @@ namespace MusicRising.Models;
 // this will be a child of user 
 public class Band 
 {
+    [Key]
     public string Id { get; set;}
     // If the user who owns the band is deleted remove the band
     [Required]
@@ -23,7 +24,7 @@ public class Band
     public List<Show>? Shows { get; set;}
     [ForeignKey("PromoItemId")]
     public List<PromoItem>? PromoItems { get; set;}
-    private string? _bankAccount { get; set;}
+    protected string? _bankAccount { get; set;}
     public GenreEnum? Genre { get; set;}
     public List<Rating>? Ratings { get; set; }
 

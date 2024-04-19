@@ -8,6 +8,7 @@ namespace MusicRising.Models;
 
 public class Rating
 {
+    [Key]
     public string Id { get; set;}
     [Required]
     public string? IdentityUserId { get; set; }

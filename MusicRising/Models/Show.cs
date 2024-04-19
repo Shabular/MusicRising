@@ -10,6 +10,7 @@ namespace MusicRising.Models;
 
 public class Show
 {
+    [Key]
     public string Id { get; set;}
     
     [Required]
@@ -27,8 +28,8 @@ public class Show
     public DateTime Date { get; set;}
     public string? PromoLink { get; set;}
     public double? ShowFee { get; set; }
-    private double BandFee { get; set; }
-    private bool? Payed { get; set; }
+    protected double BandFee { get; set; }
+    protected bool? Payed { get; set; }
     
 
 }

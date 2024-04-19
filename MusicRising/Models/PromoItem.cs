@@ -8,6 +8,7 @@ namespace MusicRising.Models;
 
 public class PromoItem
 {
+    [Key]
     public string Id { get; set;}
 
     [Required]

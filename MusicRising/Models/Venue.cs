@@ -9,6 +9,7 @@ namespace MusicRising.Models;
 
 public class Venue
 {
+    [Key]
     public string Id { get; set;}
     // If the user who owns the venue is deleted remove the band
     [Required]
@@ -19,7 +20,7 @@ public class Venue
     public LocationEnum Location { get; set;}
     public List<Show>? Shows { get; set;}
     public List<PromoItem>? PromoItems { get; set;}
-    private string? _bankAccount { get; set;}
+    protected string? _bankAccount { get; set;}
     public GenreEnum Genre { get; set;}
     public List<Rating>? Ratings { get; set; }
 
