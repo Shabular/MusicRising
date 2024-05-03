@@ -11,7 +11,7 @@ namespace MusicRising.Models;
 public class Show
 {
     [Key]
-    public string Id { get; set;}
+    public string ShowId { get; set;}
     
     [Required]
     public string? VenueId { get; set; }

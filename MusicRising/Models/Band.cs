@@ -11,7 +11,7 @@ namespace MusicRising.Models;
 public class Band 
 {
     [Key]
-    public string Id { get; set;}
+    public string BandId { get; set;}
     // If the user who owns the band is deleted remove the band
     [Required]
     public string IdentityUserId { get; set;}

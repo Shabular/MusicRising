@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+using System;
 
 namespace MusicRising.Data.Migrations
 {
@@ -36,7 +35,7 @@ namespace MusicRising.Data.Migrations
                 name: "IX_Venues_IdentityUserId",
                 table: "Venues",
                 column: "IdentityUserId");
-            
+
             migrationBuilder.CreateTable(
                 name: "Bands",
                 columns: table => new
@@ -45,9 +44,9 @@ namespace MusicRising.Data.Migrations
                     IdentityUserId = table.Column<string>(type: "varchar(255)", nullable: false),
                     BandName = table.Column<string>(type: "varchar(255)", nullable: true),
                     BandPicture = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Location = table.Column<int>(type: "int", nullable: true), // Assuming LocationEnum is an integer type
+                    Location = table.Column<int>(type: "int", nullable: true),
                     _bankAccount = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Genre = table.Column<int>(type: "int", nullable: true), // Assuming GenreEnum is an integer type
+                    Genre = table.Column<int>(type: "int", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -57,19 +56,19 @@ namespace MusicRising.Data.Migrations
                         column: x => x.IdentityUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade); // Assuming the relationship is required
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bands_IdentityUserId",
                 table: "Bands",
                 column: "IdentityUserId");
-            
+
             migrationBuilder.CreateTable(
                 name: "Shows",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    ShowId = table.Column<string>(type: "varchar(255)", nullable: false), // Changed from "Id" to "ShowId"
                     VenueId = table.Column<string>(type: "varchar(255)", nullable: false),
                     BandId = table.Column<string>(type: "varchar(255)", nullable: true),
                     Genre = table.Column<int>(type: "int", nullable: false),
@@ -81,7 +80,7 @@ namespace MusicRising.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shows", x => x.Id);
+                    table.PrimaryKey("PK_Shows", x => x.ShowId); // Changed from "Id" to "ShowId"
                     table.ForeignKey(
                         name: "FK_Shows_Bands_BandId",
                         column: x => x.BandId,
@@ -105,7 +104,7 @@ namespace MusicRising.Data.Migrations
                 name: "IX_Shows_VenueId",
                 table: "Shows",
                 column: "VenueId");
-            
+
             migrationBuilder.CreateTable(
                 name: "PromoItems",
                 columns: table => new
@@ -124,19 +123,19 @@ namespace MusicRising.Data.Migrations
                         column: x => x.IdentityUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade); // Assuming the relationship is required
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PromoItems_Bands_BandId",
                         column: x => x.BandId,
                         principalTable: "Bands",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict); // Adjust the delete behavior if necessary
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PromoItems_Venues_VenueId",
                         column: x => x.VenueId,
                         principalTable: "Venues",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict); // Adjust the delete behavior if necessary
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -153,7 +152,7 @@ namespace MusicRising.Data.Migrations
                 name: "IX_PromoItems_VenueId",
                 table: "PromoItems",
                 column: "VenueId");
-            
+
             migrationBuilder.CreateTable(
                 name: "Ratings",
                 columns: table => new
@@ -166,52 +165,62 @@ namespace MusicRising.Data.Migrations
                     Comment = table.Column<string>(type: "longtext", nullable: true), // Change varchar(max) to longtext
                     Date = table.Column<DateTime>(type: "datetime", nullable: false),
                 },
-        constraints: table =>
-        {
-            table.PrimaryKey("PK_Ratings", x => x.Id);
-            table.ForeignKey(
-                name: "FK_Ratings_AspNetUsers_IdentityUserId",
-                column: x => x.IdentityUserId,
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade); // Assuming the relationship is required
-            table.ForeignKey(
-                name: "FK_Ratings_Bands_BandId",
-                column: x => x.BandId,
-                principalTable: "Bands",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict); // Adjust the delete behavior if necessary
-            table.ForeignKey(
-                name: "FK_Ratings_Venues_VenueId",
-                column: x => x.VenueId,
-                principalTable: "Venues",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict); // Adjust the delete behavior if necessary
-        });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ratings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ratings_AspNetUsers_IdentityUserId",
+                        column: x => x.IdentityUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Bands_BandId",
+                        column: x => x.BandId,
+                        principalTable: "Bands",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Ratings_Venues_VenueId",
+                        column: x => x.VenueId,
+                        principalTable: "Venues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
-    migrationBuilder.CreateIndex(
-        name: "IX_Ratings_IdentityUserId",
-        table: "Ratings",
-        column: "IdentityUserId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_IdentityUserId",
+                table: "Ratings",
+                column: "IdentityUserId");
 
-    migrationBuilder.CreateIndex(
-        name: "IX_Ratings_BandId",
-        table: "Ratings",
-        column: "BandId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_BandId",
+                table: "Ratings",
+                column: "BandId");
 
-    migrationBuilder.CreateIndex(
-        name: "IX_Ratings_VenueId",
-        table: "Ratings",
-        column: "VenueId");
-            
-            
-            
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_VenueId",
+                table: "Ratings",
+                column: "VenueId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PromoItems");
 
+            migrationBuilder.DropTable(
+                name: "Ratings");
+
+            migrationBuilder.DropTable(
+                name: "Shows");
+
+            migrationBuilder.DropTable(
+                name: "Bands");
+
+            migrationBuilder.DropTable(
+                name: "Venues");
         }
     }
 }

@@ -16,7 +16,7 @@
                 <img src="~/Images/@Show.PromoLink" style="max-width: 400px; max-height: 400px;">
             </div>
             <div class="col col-xs-6 col-lg-5">
-                <h5><a asp-action="Details" asp-route-id="@Show.Id" style="color: black"></a></h5>
+                <h5><a asp-action="Details" asp-route-id="@Show.ShowId" style="color: black"></a></h5>
                 <div>Watch: $@Show.HeadLiner</div>
                 <div>At: $@Show.Venue</div>
                 <div>@Show.Date.ToString(CultureInfo.InvariantCulture)</div>

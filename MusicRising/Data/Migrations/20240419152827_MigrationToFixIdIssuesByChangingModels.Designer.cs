@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicRising.Data;
 
@@ -11,9 +12,11 @@ using MusicRising.Data;
 namespace MusicRising.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240419152827_MigrationToFixIdIssuesByChangingModels")]
+    partial class MigrationToFixIdIssuesByChangingModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -256,6 +259,9 @@ namespace MusicRising.Data.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("IdentityUserId")
@@ -266,15 +272,13 @@ namespace MusicRising.Data.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("VenueId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("PromoItemId");
 
-                    b.HasIndex("BandId");
+                    b.HasIndex("Id");
 
                     b.HasIndex("IdentityUserId");
-
-                    b.HasIndex("VenueId");
 
                     b.ToTable("PromoItems");
                 });
@@ -443,7 +447,11 @@ namespace MusicRising.Data.Migrations
                 {
                     b.HasOne("MusicRising.Models.Band", "Band")
                         .WithMany()
-                        .HasForeignKey("BandId");
+                        .HasForeignKey("Id");
+
+                    b.HasOne("MusicRising.Models.Venue", "Venue")
+                        .WithMany("PromoItems")
+                        .HasForeignKey("Id");
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -456,10 +464,6 @@ namespace MusicRising.Data.Migrations
                         .HasForeignKey("PromoItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("MusicRising.Models.Venue", "Venue")
-                        .WithMany("PromoItems")
-                        .HasForeignKey("VenueId");
 
                     b.Navigation("Band");
 

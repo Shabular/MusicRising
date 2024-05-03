@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicRising.Data;
 
@@ -11,9 +12,11 @@ using MusicRising.Data;
 namespace MusicRising.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240419151447_MigrationToFixDatabase")]
+    partial class MigrationToFixDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,7 +227,7 @@ namespace MusicRising.Data.Migrations
 
             modelBuilder.Entity("MusicRising.Models.Band", b =>
                 {
-                    b.Property<string>("BandId")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandName")
@@ -243,7 +246,7 @@ namespace MusicRising.Data.Migrations
                     b.Property<int?>("Location")
                         .HasColumnType("int");
 
-                    b.HasKey("BandId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
 
@@ -252,11 +255,11 @@ namespace MusicRising.Data.Migrations
 
             modelBuilder.Entity("MusicRising.Models.PromoItem", b =>
                 {
-                    b.Property<string>("PromoItemId")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("IdentityUserId")
                         .IsRequired()
@@ -265,23 +268,24 @@ namespace MusicRising.Data.Migrations
                     b.Property<string>("Link")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("VenueId")
+                    b.Property<string>("PromoItemId")
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("PromoItemId");
+                    b.Property<string>("VenueId")
+                        .HasColumnType("longtext");
 
-                    b.HasIndex("BandId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
 
-                    b.HasIndex("VenueId");
+                    b.HasIndex("PromoItemId");
 
                     b.ToTable("PromoItems");
                 });
 
             modelBuilder.Entity("MusicRising.Models.Rating", b =>
                 {
-                    b.Property<string>("RatingId")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandId")
@@ -304,7 +308,7 @@ namespace MusicRising.Data.Migrations
                     b.Property<string>("VenueId")
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("RatingId");
+                    b.HasKey("Id");
 
                     b.HasIndex("BandId");
 
@@ -317,7 +321,7 @@ namespace MusicRising.Data.Migrations
 
             modelBuilder.Entity("MusicRising.Models.Show", b =>
                 {
-                    b.Property<string>("ShowId")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandID")
@@ -338,13 +342,18 @@ namespace MusicRising.Data.Migrations
                     b.Property<double?>("ShowFee")
                         .HasColumnType("double");
 
+                    b.Property<string>("ShowId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("VenueId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("ShowId");
+                    b.HasKey("Id");
 
                     b.HasIndex("BandId");
+
+                    b.HasIndex("ShowId");
 
                     b.HasIndex("VenueId");
 
@@ -353,7 +362,7 @@ namespace MusicRising.Data.Migrations
 
             modelBuilder.Entity("MusicRising.Models.Venue", b =>
                 {
-                    b.Property<string>("VenueId")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("Genre")
@@ -370,7 +379,7 @@ namespace MusicRising.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("VenueId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
 
@@ -443,7 +452,15 @@ namespace MusicRising.Data.Migrations
                 {
                     b.HasOne("MusicRising.Models.Band", "Band")
                         .WithMany()
-                        .HasForeignKey("BandId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MusicRising.Models.Venue", "Venue")
+                        .WithMany("PromoItems")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -453,13 +470,7 @@ namespace MusicRising.Data.Migrations
 
                     b.HasOne("MusicRising.Models.Band", null)
                         .WithMany("PromoItems")
-                        .HasForeignKey("PromoItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MusicRising.Models.Venue", "Venue")
-                        .WithMany("PromoItems")
-                        .HasForeignKey("VenueId");
+                        .HasForeignKey("PromoItemId");
 
                     b.Navigation("Band");
 
@@ -499,9 +510,7 @@ namespace MusicRising.Data.Migrations
 
                     b.HasOne("MusicRising.Models.Band", null)
                         .WithMany("Shows")
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShowId");
 
                     b.HasOne("MusicRising.Models.Venue", "Venue")
                         .WithMany("Shows")

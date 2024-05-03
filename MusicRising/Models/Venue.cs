@@ -10,7 +10,7 @@ namespace MusicRising.Models;
 public class Venue
 {
     [Key]
-    public string Id { get; set;}
+    public string VenueId { get; set;}
     // If the user who owns the venue is deleted remove the band
     [Required]
     public string IdentityUserId { get; set;}
