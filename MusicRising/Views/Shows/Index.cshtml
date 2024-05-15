@@ -13,7 +13,8 @@
     <div class="container" style="background-color: rgba(138,129,0.6); margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
         <div class="row">
             <div class="col col-xs-6 col-lg-5">
-                <img src="~/Images/@Show.PromoLink" style="max-width: 400px; max-height: 400px;">
+                <!--If there is no show.promolink to a promo item we put the name of the headlinere here-->
+                <img src="@Show.PromoLink" alt="@Show.HeadLiner.BandName">
             </div>
             <div class="col col-xs-6 col-lg-5">
                 <h5><a asp-action="Details" asp-route-id="@Show.ShowId" style="color: black"></a></h5>
