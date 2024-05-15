@@ -233,6 +233,9 @@ namespace MusicRising.Data.Migrations
                     b.Property<string>("BandPicture")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("BankAccount")
+                        .HasColumnType("longtext");
+
                     b.Property<int?>("Genre")
                         .HasColumnType("int");
 
@@ -320,8 +323,8 @@ namespace MusicRising.Data.Migrations
                     b.Property<string>("ShowId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("BandID")
-                        .HasColumnType("longtext");
+                    b.Property<double>("BandFee")
+                        .HasColumnType("double");
 
                     b.Property<string>("BandId")
                         .HasColumnType("varchar(255)");
@@ -331,6 +334,9 @@ namespace MusicRising.Data.Migrations
 
                     b.Property<int>("Genre")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Payed")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("PromoLink")
                         .HasColumnType("longtext");
@@ -355,6 +361,10 @@ namespace MusicRising.Data.Migrations
                 {
                     b.Property<string>("VenueId")
                         .HasColumnType("varchar(255)");
+
+                    b.Property<string>("BankAccount")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Genre")
                         .HasColumnType("int");
@@ -442,8 +452,9 @@ namespace MusicRising.Data.Migrations
             modelBuilder.Entity("MusicRising.Models.PromoItem", b =>
                 {
                     b.HasOne("MusicRising.Models.Band", "Band")
-                        .WithMany()
-                        .HasForeignKey("BandId");
+                        .WithMany("PromoItems")
+                        .HasForeignKey("BandId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -451,15 +462,10 @@ namespace MusicRising.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MusicRising.Models.Band", null)
-                        .WithMany("PromoItems")
-                        .HasForeignKey("PromoItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("MusicRising.Models.Venue", "Venue")
                         .WithMany("PromoItems")
-                        .HasForeignKey("VenueId");
+                        .HasForeignKey("VenueId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Band");
 
@@ -472,7 +478,8 @@ namespace MusicRising.Data.Migrations
                 {
                     b.HasOne("MusicRising.Models.Band", "Band")
                         .WithMany("Ratings")
-                        .HasForeignKey("BandId");
+                        .HasForeignKey("BandId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
@@ -482,7 +489,8 @@ namespace MusicRising.Data.Migrations
 
                     b.HasOne("MusicRising.Models.Venue", "Venue")
                         .WithMany("Ratings")
-                        .HasForeignKey("VenueId");
+                        .HasForeignKey("VenueId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Band");
 
@@ -494,14 +502,9 @@ namespace MusicRising.Data.Migrations
             modelBuilder.Entity("MusicRising.Models.Show", b =>
                 {
                     b.HasOne("MusicRising.Models.Band", "HeadLiner")
-                        .WithMany()
-                        .HasForeignKey("BandId");
-
-                    b.HasOne("MusicRising.Models.Band", null)
                         .WithMany("Shows")
-                        .HasForeignKey("ShowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BandId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("MusicRising.Models.Venue", "Venue")
                         .WithMany("Shows")
