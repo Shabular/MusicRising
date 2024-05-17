@@ -32,38 +32,49 @@
     </nav>
 </header>
 <nav class="selection-bar">
-    <button class="selection">Location</button>
-    <button class="selection">Genre</button>
-    <button class="selection">Liked</button>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
+        <ul class="dropdown-menu" aria-labelledby="locationDropdown">
+            <li><a class="dropdown-item" href="#">Location 1</a></li>
+            <li><a class="dropdown-item" href="#">Location 2</a></li>
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="genreDropdown" data-bs-toggle="dropdown" aria-expanded="false">Genre</button>
+        <ul class="dropdown-menu" aria-labelledby="genreDropdown">
+            <li><a class="dropdown-item" href="#">Genre 1</a></li>
+            <li><a class="dropdown-item" href="#">Genre 2</a></li>
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="likedDropdown" data-bs-toggle="dropdown" aria-expanded="false">Liked</button>
+        <ul class="dropdown-menu" aria-labelledby="likedDropdown">
+            <li><a class="dropdown-item" href="#">Liked 1</a></li>
+            <li><a class="dropdown-item" href="#">Liked 2</a></li>
+        </ul>
+    </div>
 </nav>
 <nav class="bottom-nav">
-    <button class="nav-btn">Shows</button>
-    <button class="nav-btn">Bands</button>
-    <button class="nav-btn">Venue</button>
-    <button class="nav-btn">About</button>
+    <a class="nav-btn" asp-area="" asp-controller="Shows" asp-action="Index">Shows</a>
+    <a class="nav-btn" asp-area="" asp-controller="Bands" asp-action="Index">Bands</a>
+    <a class="nav-btn" asp-area="" asp-controller="Venues" asp-action="Index">Venue</a>
+    <a class="nav-btn" asp-area="" asp-controller="About" asp-action="Index">About</a>
 </nav>
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()
-        
     </main>
-    
 </div>
-
 <footer class="footer text-muted">
-
     <div class="container">
         &copy; 2024 - Music Rising - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
-
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
-
-
 </body>
-
 </html>
