@@ -114,7 +114,7 @@ body {
   background-color: #2C3E50; /* Dark Slate Blue */
   display: flex;
   justify-content: space-around;
-  padding: 10px 0;
+  padding: 0; /* Remove padding */
   position: fixed;
   bottom: 50px;
   width: 100%;
@@ -128,12 +128,24 @@ body {
   color: #FFFFFF; /* White */
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, outline 0.3s ease;
   text-decoration: none; /* Ensure links have no underline */
+  flex: 1; /* Make buttons fill the available space */
+  height: 100%; /* Make buttons fill the height of the nav bar */
+  padding: 15px 0; /* Adjust padding to fill the height */
+  margin: 0 2px; /* Small margin to almost touch each other */
+  display: flex; /* Make the anchor tag behave like a flex container */
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
 }
 
 .nav-btn:hover {
   color: #FFD700; /* Bright Yellow */
+}
+
+.nav-btn:focus, .nav-btn.selected {
+  background-color: #34495E; /* Lighter Dark Slate Blue */
+  outline: 2px solid #FFD700; /* Bright Yellow */
 }
 
 .footer {
@@ -142,20 +154,4 @@ body {
   text-align: center;
   position: fixed;
   bottom: 0;
-  width: 100%;
-  color: #2C3E50; /* Charcoal */
-}
-
-.login-btn {
-  background-color: #A35400; /* Really Dark Orange */
-  color: #FFFFFF; /* White */
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.login-btn:hover {
-  background-color: #8B4500; /* Darker shade of Really Dark Orange */
-}
+  width:
