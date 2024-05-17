@@ -1,17 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 using MusicRising.Helpers;
 
 namespace MusicRising.Models;
 
-public class Show
+public class ShowVM
 {
-    public Show()
-    {
-    }
-
     [Key]
     public string ShowId { get; set;}
 
@@ -29,9 +23,10 @@ public class Show
 
     public GenreEnum Genre { get; set; }
     public DateTime Date { get; set; }
-    public string? PromoLink { get; set; }
+    public string? PromoItem { get; set; }
     public double? ShowFee { get; set; }
+    
 
-    public double BandFee { get; set; } 
-    public bool Payed { get; private set; } = false; // Consider changing to public or providing a getter/setter
+    public double BandFee { get; private set; } // Consider providing a public getter if needed
+    public bool Payed { get; private set; } // Consider changing to public or providing a getter/setter
 }

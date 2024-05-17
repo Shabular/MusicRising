@@ -27,7 +27,7 @@ namespace MusicRising.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        /*// GET: Shows/Details/5
+/*      // GET: Shows/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -48,31 +48,40 @@ namespace MusicRising.Controllers
         }
 
         // GET: Shows/Create
+*/
+        // for now we use this by inputing it but this will be done when a show is accepted by a band
         public IActionResult Create()
         {
-            ViewData["Id"] = new SelectList(_context.Bands, "Id", "Id");
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Id");
             return View();
         }
 
         // POST: Shows/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VenueId,BandID,Genre,Date,PromoLink,ShowFee")] Show show)
+        public async Task<IActionResult> Create(ShowVM show)
         {
-            if (ModelState.IsValid)
+            if (show.BandId != null )
             {
-                _context.Add(show);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var showObj = new Show
+                {
+                    VenueId = show.VenueId,
+                    BandId = show.BandId,
+                    Genre = show.Genre,
+                    Date = show.Date,
+                    BandFee = show.BandFee
+                };
+                await _showsService.Add(showObj);
+                return RedirectToAction("Index");  
             }
-            ViewData["Id"] = new SelectList(_context.Bands, "Id", "Id", show.Id);
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Id", show.VenueId);
-            return View(show);
-        }
 
+            return View(show);
+
+        }
+       
+/*
         // GET: Shows/Edit/5
         public async Task<IActionResult> Edit(string id)
         {

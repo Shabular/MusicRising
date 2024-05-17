@@ -19,4 +19,10 @@ public class ShowsService : IShowsService
         return applicationDbContext;
 
     }
+
+    public async Task Add(Show show)
+    {
+        _context.Shows.Add(show);
+        await _context.SaveChangesAsync();
+    }
 }
