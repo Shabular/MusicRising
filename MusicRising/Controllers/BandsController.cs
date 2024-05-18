@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -29,6 +30,7 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _bandsService.GetAll();
+            Debug.WriteLine("test from controller");
             return View(await applicationDbContext.ToListAsync());
         }
         
@@ -54,7 +56,7 @@ namespace MusicRising.Controllers
 
             var band = await _bandsService.GetAll()
                 .Include(b => b.User)
-                .FirstOrDefaultAsync(m => m.BandId == id);
+                .FirstOrDefaultAsync(b => b.BandId == id);
             if (band == null)
             {
                 return NotFound();
@@ -89,6 +91,7 @@ namespace MusicRising.Controllers
                     band.Image.CopyTo(fileStream);
                 }
 
+                Debug.WriteLine(band);
                 var bandObj = new Band
                 {
                     BandId = Guid.NewGuid().ToString(), // Generate identifier to be used as bandd,

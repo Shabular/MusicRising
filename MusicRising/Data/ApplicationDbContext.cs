@@ -24,6 +24,11 @@ public class ApplicationDbContext : IdentityDbContext
         // Configure the Band entity
         modelBuilder.Entity<Band>(entity =>
         {
+            entity.HasKey(b => b.BandId);
+            entity.Property(b => b.BandId)
+                .HasMaxLength(36) // Ensure the length matches the length of the GUID
+                .IsUnicode(false);
+            
             entity.HasMany(b => b.Shows)
                   .WithOne(s => s.HeadLiner) // Correct navigation property
                   .HasForeignKey(s => s.BandId)

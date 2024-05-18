@@ -1,24 +1,24 @@
-@model IEnumerable<MusicRising.Models.Band>
+@model List<Band>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Find a Band</h1>
-
-@foreach (var Band in Model) {
+<h1>The Band</h1>
+<h1>@Model.Count </h1>
+@foreach (var band in Model) {
     <div class="container" style="background-color: rgba(138, 129, 0, 0.6); margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
         <div class="row">
             <div class="col col-xs-6 col-lg-5">
                 <!--If there is no show.promolink to a promo item, we put the name of the headliner here-->
-                <img src="@Band.BandPicture" alt="@Band.BandName">
+                <img src="@band.BandPicture" alt="@band.BandName">
             </div>
             <div class="col col-xs-6 col-lg-5">
-                <h5>"@Band.BandName"</h5>
+                <h5>"@band.BandName"</h5>
             </div>
             <div class="col col-xs-6 col-lg-5">
-                <h5><a asp-action="Details" asp-route-id="@Band.Genre" style="color: black">@Band.Genre</a></h5>
+                <h5><a asp-action="Details" asp-route-id="@band.Genre" style="color: black">@band.Genre</a></h5>
             </div>
         </div>
     </div>
