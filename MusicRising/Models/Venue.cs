@@ -22,6 +22,8 @@ public class Venue
     // Proper navigation properties for EF relationships
     public List<Show>? Shows { get; set;}
     public List<PromoItem>? PromoItems { get; set;}
+    
+    public string? VenuePicture { get; set; }
 
     public string BankAccount { get; private set;}  // Made public getter for external access if needed
     public GenreEnum Genre { get; set;}

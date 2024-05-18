@@ -134,9 +134,10 @@ body {
   height: 100%; /* Make buttons fill the height of the nav bar */
   padding: 15px 0; /* Adjust padding to fill the height */
   margin: 0 2px; /* Small margin to almost touch each other */
-  display: flex; /* Make the anchor tag behave like a flex container */
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Center the content vertically */
+  text-align: center; /* Center text within the button */
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Vertically center items */
+  justify-content: center; /* Horizontally center items */
 }
 
 .nav-btn:hover {
@@ -154,4 +155,20 @@ body {
   text-align: center;
   position: fixed;
   bottom: 0;
-  width:
+  width: 100%;
+  color: #2C3E50; /* Charcoal */
+}
+
+.login-btn {
+  background-color: #A35400; /* Really Dark Orange */
+  color: #FFFFFF; /* White */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #8B4500; /* Darker shade of Really Dark Orange */
+}

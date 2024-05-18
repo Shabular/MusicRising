@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,18 +21,32 @@
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Bands" asp-action="Landing">My Band</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Venues" asp-action="Landing">My Venue</a>
+                        </li>
+                    }
                 </ul>
-                <button class="login-btn">Login</button>
+                <partial name="_LoginPartial"/>
             </div>
         </div>
     </nav>
 </header>
+
+@{
+// here we get the current page and if it is a page not having to do with finding bands/venues/etc we remove the bar from layout
+var path = HttpContextAccessor.HttpContext.Request.Path.ToString().ToLower();
+var showSelectionBar = !(path.Contains("/about") || path.Contains("/identity") || path.Contains("/home"));
+}
+
+@if (showSelectionBar)
+{
 <nav class="selection-bar">
     <div class="dropdown">
         <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
@@ -56,11 +72,14 @@
         </ul>
     </div>
 </nav>
+}
+
 <nav class="bottom-nav">
     <a class="nav-btn" asp-area="" asp-controller="Shows" asp-action="Index">Shows</a>
+    <div class="divider"></div>
     <a class="nav-btn" asp-area="" asp-controller="Bands" asp-action="Index">Bands</a>
-    <a class="nav-btn" asp-area="" asp-controller="Venues" asp-action="Index">Venue</a>
-    <a class="nav-btn" asp-area="" asp-controller="About" asp-action="Index">About</a>
+    <div class="divider"></div>
+    <a class="nav-btn" asp-area="" asp-controller="Venues" asp-action="Index">Venues</a>
 </nav>
 <div class="container">
     <main role="main" class="pb-3">

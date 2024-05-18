@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace MusicRising.Controllers
     public class ShowsController : Controller
     {
         private readonly IShowsService _showsService;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public ShowsController(IShowsService showsService)
         {

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<MusicRising.Models.Venue>
+
+@{
+    ViewData["Title"] = "My Bands";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Venue</h2>
+
+@if (Model.Any())
+{
+    <p>Select a band to manage:</p>
+    <ul>
+        @foreach (var Venue in Model)
+        {
+            <li>
+                <a asp-action="Details" asp-route-id="@Venue.VenueId">@Venue.VenueName</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You don't have any venues yet.</p>
+}
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create a New Venue</a>
+</p>

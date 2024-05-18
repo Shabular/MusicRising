@@ -5,56 +5,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Find a Venue</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VenueName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BankAccount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VenueName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BankAccount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VenueId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VenueId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VenueId">Delete</a>
-            </td>
-        </tr>
+@foreach (var Venue in Model) {
+    <div class="container" style="background-color: rgba(138, 129, 0, 0.6); margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
+        <div class="row">
+            <div class="col col-xs-6 col-lg-5">
+                <!--If there is no show.promolink to a promo item, we put the name of the headliner here-->
+                <img src="@Venue.VenuePicture" alt="@Venue.VenueName">
+            </div>
+            <div class="col col-xs-6 col-lg-5">
+                <h5>"@Venue.VenueName"</h5>
+            </div>
+            <div class="col col-xs-6 col-lg-5">
+                <h5><a asp-action="Details" asp-route-id="@Venue.Genre" style="color: black">@Venue.Genre</a></h5>
+            </div>
+        </div>
+    </div>
 }
-    </tbody>
-</table>
+
+@if (!Model.Any())
+{
+    <p>No venues are registered yet</p>
+}

@@ -1,26 +1,23 @@
-@model MusicRising.Models.Band
+@model MusicRising.Models.BandVM
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+<h2>Create a band</h2>
 
 <h4>Band</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="BandId" class="control-label"></label>
-                <input asp-for="BandId" class="form-control" />
-                <span asp-validation-for="BandId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdentityUserId" class="control-label"></label>
-                <select asp-for="IdentityUserId" class ="form-control" asp-items="ViewBag.IdentityUserId"></select>
+                <input type="hidden" asp-for="IdentityUserId" class ="form-control" asp-items="@UserManager.GetUserId(User)"></input>
             </div>
             <div class="form-group">
                 <label asp-for="BandName" class="control-label"></label>
@@ -28,9 +25,9 @@
                 <span asp-validation-for="BandName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BandPicture" class="control-label"></label>
-                <input asp-for="BandPicture" class="form-control" />
-                <span asp-validation-for="BandPicture" class="text-danger"></span>
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" accept="image/*" style="width: 30%"/>
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>

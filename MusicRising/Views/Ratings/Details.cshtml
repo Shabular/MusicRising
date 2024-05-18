@@ -1,14 +1,14 @@
-@model MusicRising.Models.Band
+@model MusicRising.Models.Rating
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Band details</h1>
+<h1>Details</h1>
 
 <div>
-    <h4>Band</h4>
+    <h4>Rating</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -18,38 +18,38 @@
             @Html.DisplayFor(model => model.User.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BandName)
+            @Html.DisplayNameFor(model => model.Band)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BandName)
+            @Html.DisplayFor(model => model.Band.BandId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BandPicture)
+            @Html.DisplayNameFor(model => model.Venue)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BandPicture)
+            @Html.DisplayFor(model => model.Venue.VenueId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
+            @Html.DisplayNameFor(model => model.Stars)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
+            @Html.DisplayFor(model => model.Stars)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
+            @Html.DisplayNameFor(model => model.Comment)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre)
+            @Html.DisplayFor(model => model.Comment)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BankAccount)
+            @Html.DisplayNameFor(model => model.Date)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BankAccount)
+            @Html.DisplayFor(model => model.Date)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.BandId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.RatingId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

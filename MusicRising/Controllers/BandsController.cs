@@ -2,29 +2,47 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicRising.Data;
+using MusicRising.Data.Services;
 using MusicRising.Models;
 
 namespace MusicRising.Controllers
 {
     public class BandsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IBandsService _bandsService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public BandsController(ApplicationDbContext context)
+        public BandsController(IBandsService bandsService, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
-            _context = context;
+            _bandsService = bandsService;
+            _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Bands
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Bands.Include(b => b.User);
+            var applicationDbContext = _bandsService.GetAll();
             return View(await applicationDbContext.ToListAsync());
         }
+        
+        // GET: Bands/Landing
+        public async Task<IActionResult> Landing()
+        {
+            var userId = _userManager.GetUserId(User);
+            var userBands = await _bandsService.GetAll()
+                .Where(b => b.BandId == userId)
+                .ToListAsync();
+
+            return View(userBands);
+        }
+        
 
         // GET: Bands/Details/5
         public async Task<IActionResult> Details(string id)
@@ -34,7 +52,7 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var band = await _context.Bands
+            var band = await _bandsService.GetAll()
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.BandId == id);
             if (band == null)
@@ -48,7 +66,7 @@ namespace MusicRising.Controllers
         // GET: Bands/Create
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["IdentityUserId"] = new SelectList(_userManager.Users, "Id", "Id");
             return View();
         }
 
@@ -57,18 +75,40 @@ namespace MusicRising.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BandId,IdentityUserId,BandName,BandPicture,Location,Genre,BankAccount")] Band band)
+        public async Task<IActionResult> Create(BandVM band)
         {
-            if (ModelState.IsValid)
+            if (band.Image != null)
             {
-                _context.Add(band);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                // get the filnamen and add to the foldername to create a place to store band/venue pics
+                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+                string fileName = Guid.NewGuid().ToString() + "_" + band.Image.FileName; // this is used to be able to have multiple same filenames just in case
+                string filePath = Path.Combine(uploadDir, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    band.Image.CopyTo(fileStream);
+                }
+
+                var bandObj = new Band
+                {
+                    BandId = Guid.NewGuid().ToString(), // Generate identifier to be used as bandd,
+                    IdentityUserId = band.IdentityUserId,
+                    User = band.User,
+                    BandName = band.BandName,
+                    BandPicture = filePath,
+                    Location = band.Location,
+                    Genre = band.Genre,
+                    BankAccount = band.BankAccount
+                };
+                
+                await _bandsService.Add(bandObj);
+                
+                return RedirectToAction("Index");
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", band.IdentityUserId);
+            ViewData["IdentityUserId"] = new SelectList(_userManager.Users, "Id", "Id", band.IdentityUserId);
             return View(band);
         }
-
+/*p
         // GET: Bands/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -159,6 +199,6 @@ namespace MusicRising.Controllers
         private bool BandExists(string id)
         {
             return _context.Bands.Any(e => e.BandId == id);
-        }
+        }*/
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace MusicRising.Controllers
     public class VenuesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public VenuesController(ApplicationDbContext context)
+        public VenuesController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Venues
@@ -24,6 +27,17 @@ namespace MusicRising.Controllers
         {
             var applicationDbContext = _context.Venues.Include(v => v.User);
             return View(await applicationDbContext.ToListAsync());
+        }
+        
+        // GET: Bands/Landing
+        public async Task<IActionResult> Landing()
+        {
+            var userId = _userManager.GetUserId(User);
+            var userBands = await _context.Venues
+                .Where(v => v.VenueId == userId)
+                .ToListAsync();
+
+            return View(userBands);
         }
 
         // GET: Venues/Details/5
