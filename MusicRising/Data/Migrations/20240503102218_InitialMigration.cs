@@ -15,9 +15,9 @@ namespace MusicRising.Data.Migrations
                     BandName = table.Column<string>(type: "varchar(255)", nullable: true),
                     BandPicture = table.Column<string>(type: "varchar(255)", nullable: true),
                     BankAccount = table.Column<string>(type: "longtext", nullable: true),
-                    Genre = table.Column<int>(nullable: true),
+                    Genre = table.Column<int>(nullable: true),  // Corrected type
                     IdentityUserId = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Location = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Location = table.Column<int>(nullable: true)  // Corrected type
                 },
                 constraints: table =>
                 {
@@ -32,9 +32,9 @@ namespace MusicRising.Data.Migrations
                     VenueId = table.Column<string>(type: "varchar(255)", nullable: false),
                     VenueName = table.Column<string>(type: "varchar(255)", nullable: true),
                     BankAccount = table.Column<string>(type: "longtext", nullable: true),
-                    Genre = table.Column<int>(nullable: true),  // Adding Genre column
+                    Genre = table.Column<int>(nullable: true),  // Corrected type
                     IdentityUserId = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Location = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Location = table.Column<int>(nullable: true)  // Corrected type
                 },
                 constraints: table =>
                 {
@@ -49,7 +49,7 @@ namespace MusicRising.Data.Migrations
                     ShowId = table.Column<string>(type: "varchar(255)", nullable: false),
                     BandId = table.Column<string>(type: "varchar(255)", nullable: true),
                     VenueId = table.Column<string>(type: "varchar(255)", nullable: true),
-                    Genre = table.Column<int>(nullable: true),
+                    Genre = table.Column<int>(nullable: true),  // Corrected type
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     PromoLink = table.Column<string>(type: "longtext", nullable: true),
                     ShowFee = table.Column<double>(nullable: true),

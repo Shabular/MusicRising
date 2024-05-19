@@ -29,9 +29,9 @@ namespace MusicRising.Controllers
         // GET: Bands
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _bandsService.GetAll();
-            Debug.WriteLine("test from controller");
-            return View(await applicationDbContext.ToListAsync());
+            var bands = await _bandsService.GetAll().ToListAsync();
+            Debug.WriteLine($"Found {bands.Count} bands in the Index method.");
+            return View(bands);
         }
         
         // GET: Bands/Landing
@@ -39,7 +39,7 @@ namespace MusicRising.Controllers
         {
             var userId = _userManager.GetUserId(User);
             var userBands = await _bandsService.GetAll()
-                .Where(b => b.BandId == userId)
+                .Where(b => b.IdentityUserId == userId)
                 .ToListAsync();
 
             return View(userBands);

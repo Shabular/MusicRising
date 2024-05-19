@@ -19,8 +19,17 @@ public class BandsService : IBandsService
     
     public IQueryable<Band> GetAll()
     {
-        var applicationDbContext = _context.Bands.Include(b => b.User);
-        return applicationDbContext;
+        try
+        {
+            var bands = _context.Bands.Include(b => b.User);
+            Debug.WriteLine($"Found {bands.Count()} bands");
+            return bands;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error fetching bands: {ex.Message}");
+            return Enumerable.Empty<Band>().AsQueryable();
+        }
     }
 
     public async Task Add(Band band)
