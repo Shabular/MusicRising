@@ -1,0 +1,56 @@
+@model MusicRising.Models.BandVM
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create a band</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="IdentityUserId" class ="form-control" value="@UserManager.GetUserId(User)"/>
+            </div>
+            <div class="form-group">
+                <label asp-for="BandName" class="control-label"></label>
+                <input asp-for="BandName" class="form-control" />
+                <span asp-validation-for="BandName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" class="form-control" accept="image/*" style="width: 30%"/>
+                <span asp-validation-for="Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Location, new SelectList(Enum.GetValues(typeof(MusicRising.Helpers.LocationEnum)).Cast<MusicRising.Helpers.LocationEnum>().Select(e => new SelectListItem { Text = e.ToString(), Value = e.ToString() }), "Value", "Text"), "Select Location", new { @class = "form-control" })
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Genre" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Genre, new SelectList(Enum.GetValues(typeof(MusicRising.Helpers.GenreEnum)).Cast<MusicRising.Helpers.GenreEnum>().Select(e => new SelectListItem { Text = e.ToString(), Value = e.ToString() }), "Value", "Text"), "Select Genre", new { @class = "form-control" })
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BankAccount" class="control-label"></label>
+                <input asp-for="BankAccount" class="form-control" />
+                <span asp-validation-for="BankAccount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

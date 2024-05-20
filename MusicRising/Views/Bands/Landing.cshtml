@@ -1,0 +1,35 @@
+﻿@model List<Band>
+
+@{
+    ViewData["Title"] = "My Bands";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Bands</h2>
+
+@if (Model.Any())
+{
+    <p>Select a band to manage:</p>
+    <div class="container">
+        <div class="row">
+            @foreach (var band in Model) {
+                <div class="col-md-4 d-flex align-items-stretch">
+                    @Html.Partial("_Card", new {
+                        ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("~/Images/default.png"),
+                        Title = band.BandName,
+                        Description = $"{band.Genre} | {band.Location}",
+                        Id = band.BandId
+                    })
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>You don't have any venues yet.</p>
+}
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create a New Band</a>
+</p>

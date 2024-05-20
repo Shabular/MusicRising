@@ -225,7 +225,9 @@ namespace MusicRising.Data.Migrations
             modelBuilder.Entity("MusicRising.Models.Band", b =>
                 {
                     b.Property<string>("BandId")
-                        .HasColumnType("varchar(255)");
+                        .HasMaxLength(36)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(36)");
 
                     b.Property<string>("BandName")
                         .HasColumnType("longtext");
@@ -259,7 +261,7 @@ namespace MusicRising.Data.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(36)");
 
                     b.Property<string>("IdentityUserId")
                         .IsRequired()
@@ -288,7 +290,7 @@ namespace MusicRising.Data.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("BandId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(36)");
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -327,7 +329,7 @@ namespace MusicRising.Data.Migrations
                         .HasColumnType("double");
 
                     b.Property<string>("BandId")
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("varchar(36)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
@@ -378,6 +380,9 @@ namespace MusicRising.Data.Migrations
 
                     b.Property<string>("VenueName")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("VenuePicture")
                         .HasColumnType("longtext");
 
                     b.HasKey("VenueId");

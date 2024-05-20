@@ -1,60 +1,21 @@
-@model MusicRising.Models.Show
+@model MusicRising.Models.ShowVM
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Show Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Show</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Venue)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Venue.VenueId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BandId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BandId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HeadLiner)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HeadLiner.BandId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PromoLink)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PromoLink)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ShowFee)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ShowFee)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ShowId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@Html.Partial("_Details", new {
+    Title = Model.HeadLiner?.BandName ?? "Show Details",
+    ImageFileName = Model.PromoItem,
+    Details = new Dictionary<string, string>
+    {
+        {"Venue", Model.Venue.VenueName},
+        {"Date", Model.Date.ToShortDateString()},
+        {"Genre", Model.Genre.ToString()},
+        {"Show Fee", Model.ShowFee.ToString()},
+        {"Promo Link", Model.PromoItem}
+    },
+    Id = Model.ShowId,
+    IsOwner = Model.IsOwner
+})

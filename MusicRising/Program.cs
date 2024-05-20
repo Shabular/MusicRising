@@ -21,6 +21,10 @@ builder.Services.AddControllersWithViews();
 
 //build the services to in the application
 builder.Services.AddScoped<IShowsService, ShowsService>();
+builder.Services.AddScoped<IBandsService, BandsService>();
+builder.Services.AddScoped<IVenuesService, VenuesService>();
+builder.Services.AddScoped<IRatingsService, RatingsService>();
+builder.Services.AddScoped<IPromoItemsService, PromoItemsService>();
 
 var app = builder.Build();
 
@@ -47,7 +51,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Shows}/{action=Index}/{id?}");
+    pattern: "{controller=Shows}/{action=Index}");
 app.MapRazorPages();
 
 app.Run();

@@ -1,0 +1,31 @@
+@model IEnumerable<MusicRising.Models.Venue>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Find a Venue</h1>
+
+
+<div class="container">
+    <div class="row">
+        @foreach (var Venue in Model) {
+            <div class="col-md-4 d-flex align-items-stretch">
+                @Html.Partial("_Card", new {
+                ImageUrl = Venue.VenuePicture != null ? Url.Content($"{Venue.VenuePicture}") : Url.Content("~/Images/default.png"),
+                Title = Venue.VenueName,
+                Description = $"{Venue.Genre} | {Venue.Location}",
+                Id = Venue.VenueId
+                })
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@if (!Model.Any())
+{
+    <p>No venues are registered yet</p>
+}

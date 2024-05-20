@@ -18,8 +18,8 @@ public class Band
     public string? BandName { get; set; }
     public string? BandPicture { get; set; }
 
-    public LocationEnum? Location { get; set; }
-    public GenreEnum? Genre { get; set; }
+    public LocationEnum Location { get; set; }
+    public GenreEnum Genre { get; set; }
 
     public List<Show>? Shows { get; set; }  // Ensure Show has a BandId foreign key
     public List<PromoItem>? PromoItems { get; set; }  // Ensure PromoItem has a BandId foreign key

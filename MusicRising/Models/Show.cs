@@ -33,5 +33,5 @@ public class Show
     public double? ShowFee { get; set; }
 
     public double BandFee { get; set; } 
-    public bool Payed { get; private set; } = false; // Consider changing to public or providing a getter/setter
+    public bool Payed { get; set; } = false; // Consider changing to public or providing a getter/setter
 }

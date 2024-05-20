@@ -1,0 +1,37 @@
+﻿@model List<Venue>
+
+@{
+    ViewData["Title"] = "My Bands";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Venue</h2>
+
+@if (Model.Any())
+{
+    <p>Select a band to manage:</p>
+    <ul>
+        <div class="container">
+            <div class="row">
+                @foreach (var Venue in Model) {
+                <div class="col-md-4 d-flex align-items-stretch">
+                    @Html.Partial("_Card", new {
+                    ImageUrl = Venue.VenuePicture != null ? Url.Content($"{Venue.VenuePicture}") : Url.Content("~/Images/default.png"),
+                    Title = Venue.VenueName,
+                    Description = $"{Venue.Genre} | {Venue.Location}",
+                    Id = Venue.VenueId
+                    })
+                </div>
+                }
+            </div>
+        </div>
+    </ul>
+}
+else
+{
+    <p>You don't have any venues yet.</p>
+}
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create a New Venue</a>
+</p>
