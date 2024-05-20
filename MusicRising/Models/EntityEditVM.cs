@@ -12,8 +12,8 @@ namespace MusicRising.Models
         public string IdentityUserId { get; set; }
 
         public string Name { get; set; }
-        public IFormFile Picture { get; set; }
-        public string PictureUrl { get; set; }
+        public IFormFile? Picture { get; set; }
+        public string? PictureUrl { get; set; }
 
         public LocationEnum Location { get; set; }
         public GenreEnum Genre { get; set; }

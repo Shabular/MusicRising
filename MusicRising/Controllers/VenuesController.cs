@@ -34,7 +34,7 @@ namespace MusicRising.Controllers
             return View(venues);
         }
 
-        // GET: Bands/Landing
+        // GET: Venues/Landing
         public async Task<IActionResult> Landing()
         {
             var userId = _userManager.GetUserId(User);
@@ -61,14 +61,13 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Convert Venue to VenueVM
             var venueVM = new VenueVM
             {
                 VenueId = venue.VenueId,
                 IdentityUserId = venue.IdentityUserId,
                 User = venue.User,
                 VenueName = venue.VenueName,
-                Image = null, // Assuming the image upload is not needed here, you may need to handle this differently
+                Image = null,
                 ImageFileName = venue.VenuePicture,
                 Location = venue.Location,
                 Genre = venue.Genre,
@@ -111,8 +110,7 @@ namespace MusicRising.Controllers
                 };
 
                 await _venuesService.Add(venueObj);
-
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             ViewData["IdentityUserId"] = new SelectList(_userManager.Users, "Id", "Id", venue.IdentityUserId);
             return View(venue);
@@ -132,7 +130,6 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Convert Venue to EntityEditVM
             var venueVM = new EntityEditVM
             {
                 Id = venue.VenueId,
@@ -152,9 +149,9 @@ namespace MusicRising.Controllers
         // POST: Venues/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, VenueVM venueVM)
+        public async Task<IActionResult> Edit(string id, EntityEditVM venueVM)
         {
-            if (id != venueVM.VenueId)
+            if (id != venueVM.Id)
             {
                 return NotFound();
             }
@@ -169,13 +166,13 @@ namespace MusicRising.Controllers
                         return NotFound();
                     }
 
-                    if (venueVM.ImageFileName != null)
+                    if (venueVM.Picture != null)
                     {
-                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venueVM.Image);
+                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venueVM.Picture);
                         venue.VenuePicture = filePath;
                     }
 
-                    venue.VenueName = venueVM.VenueName;
+                    venue.VenueName = venueVM.Name;
                     venue.Location = venueVM.Location;
                     venue.Genre = venueVM.Genre;
                     venue.BankAccount = venueVM.BankAccount;
@@ -184,7 +181,7 @@ namespace MusicRising.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VenueExists(venueVM.VenueId))
+                    if (!VenueExists(venueVM.Id))
                     {
                         return NotFound();
                     }
@@ -196,7 +193,7 @@ namespace MusicRising.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Title = "Venue";
-            return View(venueVM);
+            return View("_EntityEdit", venueVM);
         }
 
         // GET: Venues/Delete/5

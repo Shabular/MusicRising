@@ -18,6 +18,7 @@ namespace MusicRising.Controllers
         private readonly IBandsService _bandsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly DebugHelper _debugHelper = new DebugHelper();
 
         public BandsController(IBandsService bandsService, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
@@ -45,7 +46,7 @@ namespace MusicRising.Controllers
             return View(userBands);
         }
 
-        // Details about a band needed a viewmodel
+        // GET: Bands/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -61,14 +62,13 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Convert Band to BandVM
             var bandVM = new BandVM
             {
                 BandId = band.BandId,
                 IdentityUserId = band.IdentityUserId,
                 User = band.User,
                 BandName = band.BandName,
-                Image = null, // Assuming the image upload is not needed here, you may need to handle this differently
+                Image = null,
                 ImageFileName = band.BandPicture,
                 Location = band.Location,
                 Genre = band.Genre,
@@ -111,93 +111,110 @@ namespace MusicRising.Controllers
                 };
 
                 await _bandsService.Add(bandObj);
-
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             ViewData["IdentityUserId"] = new SelectList(_userManager.Users, "Id", "Id", band.IdentityUserId);
             return View(band);
         }
 
         // GET: Bands/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+       public async Task<IActionResult> Edit(string id)
+{
+    if (id == null)
+    {
+        return NotFound();
+    }
 
+    var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
+    if (band == null)
+    {
+        return NotFound();
+    }
+
+    var bandVM = new EntityEditVM
+    {
+        Id = band.BandId,
+        IdentityUserId = band.IdentityUserId,
+        Name = band.BandName,
+        PictureUrl = band.BandPicture,
+        Location = band.Location,
+        Genre = band.Genre,
+        BankAccount = band.BankAccount,
+        IsOwner = band.IdentityUserId == _userManager.GetUserId(User)
+    };
+
+    ViewBag.Title = "Band";
+    return View("_EntityEdit", bandVM);
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Edit(string id, EntityEditVM bandVM)
+{
+    _debugHelper.DebugWriteLine($"Received edit request for band ID: {id}");
+    if (id != bandVM.Id)
+    {
+        return NotFound();
+    }
+
+    _debugHelper.DebugWriteLine("the picture url = " + bandVM.PictureUrl);
+
+    if (ModelState.IsValid)
+    {
+        try
+        {
             var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
             if (band == null)
             {
+                _debugHelper.DebugWriteLine("band was not found");
                 return NotFound();
             }
-
-            // Convert Band to EntityEditVM
-            var bandVM = new EntityEditVM
+            
+            if (bandVM.Picture != null)
             {
-                Id = band.BandId,
-                IdentityUserId = band.IdentityUserId,
-                Name = band.BandName,
-                PictureUrl = band.BandPicture,
-                Location = band.Location,
-                Genre = band.Genre,
-                BankAccount = band.BankAccount,
-                IsOwner = band.IdentityUserId == _userManager.GetUserId(User)
-            };
+                _debugHelper.DebugWriteLine("foto update is there");
+                string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, bandVM.Picture);
+                bandVM.PictureUrl = filePath;
+                band.BandPicture = filePath;
+            }
+            
+            band.BandName = bandVM.Name;
+            band.Location = bandVM.Location;
+            band.Genre = bandVM.Genre;
+            band.BankAccount = bandVM.BankAccount;
 
-            ViewBag.Title = "Band";
-            return View("_EntityEdit", bandVM);
+            _debugHelper.DebugWriteLine("before update band");
+            
+            await _bandsService.Update(band);
+            _debugHelper.DebugWriteLine("after update band");
         }
-
-        // POST: Bands/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, EntityEditVM bandVM)
+        catch (DbUpdateConcurrencyException)
         {
-            if (id != bandVM.Id)
+            if (!BandExists(bandVM.Id))
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                try
-                {
-                    var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
-                    if (band == null)
-                    {
-                        return NotFound();
-                    }
-
-                    if (bandVM.Picture != null)
-                    {
-                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, bandVM.Picture);
-                        band.BandPicture = filePath;
-                    }
-
-                    band.BandName = bandVM.Name;
-                    band.Location = bandVM.Location;
-                    band.Genre = bandVM.Genre;
-                    band.BankAccount = bandVM.BankAccount;
-
-                    await _bandsService.Update(band);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BandExists(bandVM.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                throw;
             }
-            ViewBag.Title = "Band";
-            return View("_EntityEdit", bandVM);
         }
+        return RedirectToAction(nameof(Index));
+    }
+    else
+    {
+        {
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                _debugHelper.DebugWriteLine($"ModelState error: {error.ErrorMessage}");
+            }
+        }
+    }
+
+    ViewBag.Title = "Band";
+    return View("_EntityEdit", bandVM);
+}
+
 
         // GET: Bands/Delete/5
         public async Task<IActionResult> Delete(string id)

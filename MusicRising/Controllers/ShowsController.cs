@@ -25,8 +25,8 @@ namespace MusicRising.Controllers
         // GET: Shows
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _showsService.GetAll();
-            return View(await applicationDbContext.ToListAsync());
+            var shows = await _showsService.GetAll().ToListAsync();
+            return View(shows);
         }
 
         // GET: Shows/Details/5
@@ -46,7 +46,6 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Convert Show to ShowVM
             var showVM = new ShowVM
             {
                 ShowId = show.ShowId,
@@ -60,7 +59,7 @@ namespace MusicRising.Controllers
                 ShowFee = show.ShowFee,
                 BandFee = show.BandFee,
                 Payed = show.Payed,
-                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User) // Add this line
+                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
             return View(showVM);
@@ -92,7 +91,7 @@ namespace MusicRising.Controllers
                     Payed = show.Payed
                 };
                 await _showsService.Add(showObj);
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             return View(show);
@@ -112,7 +111,6 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Convert Show to ShowVM
             var showVM = new ShowVM
             {
                 ShowId = show.ShowId,
@@ -126,14 +124,13 @@ namespace MusicRising.Controllers
                 ShowFee = show.ShowFee,
                 BandFee = show.BandFee,
                 Payed = show.Payed,
-                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User) // Add this line
+                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
-            ViewData["VenueId"] = new SelectList(_showsService.GetAll(), "VenueId", "VenueName", show.VenueId);
-            ViewData["BandId"] = new SelectList(_showsService.GetAll(), "BandId", "BandName", show.BandId);
             return View(showVM);
         }
 
+        // POST: Shows/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, ShowVM showVM)
@@ -177,8 +174,6 @@ namespace MusicRising.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["VenueId"] = new SelectList(_showsService.GetAll(), "VenueId", "VenueName", showVM.VenueId);
-            ViewData["BandId"] = new SelectList(_showsService.GetAll(), "BandId", "BandName", showVM.BandId);
             return View(showVM);
         }
 

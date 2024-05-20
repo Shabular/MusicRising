@@ -3,47 +3,50 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MusicRising.Models;
 
-namespace MusicRising.Data.Services;
-
-public class VenuesService : IVenuesService
+namespace MusicRising.Data.Services
 {
-    private readonly ApplicationDbContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    
-    public VenuesService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+    public class VenuesService : IVenuesService
     {
-        _context = context;
-        _userManager = userManager;
-    }
-    
-    public IQueryable<Venue> GetAll()
-    {
-        try
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+
+        public VenuesService(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
-            var venues = _context.Venues.Include(b => b.User);
-            Debug.WriteLine($"Found {venues.Count()} bands");
-            return venues;
+            _context = context;
+            _userManager = userManager;
         }
-        catch (Exception ex)
+
+        public IQueryable<Venue> GetAll()
         {
-            Debug.WriteLine($"Error fetching bands: {ex.Message}");
-            return Enumerable.Empty<Venue>().AsQueryable();
+            try
+            {
+                var venues = _context.Venues.Include(b => b.User);
+                Debug.WriteLine($"Found {venues.Count()} venues");
+                return venues;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error fetching venues: {ex.Message}");
+                return Enumerable.Empty<Venue>().AsQueryable();
+            }
         }
-    }
 
-    public async Task Add(Venue venue)
-    {
-        _context.Venues.Add(venue);
-        await _context.SaveChangesAsync();
-    }
+        public async Task Add(Venue venue)
+        {
+            _context.Venues.Add(venue);
+            await _context.SaveChangesAsync();
+        }
 
-    public Task Delete(Venue venue)
-    {
-        throw new NotImplementedException();
-    }
+        public async Task Delete(Venue venue)
+        {
+            _context.Venues.Remove(venue);
+            await _context.SaveChangesAsync();
+        }
 
-    public Task Update(Venue venue)
-    {
-        throw new NotImplementedException();
+        public async Task Update(Venue venue)
+        {
+            _context.Venues.Update(venue);
+            await _context.SaveChangesAsync();
+        }
     }
 }
