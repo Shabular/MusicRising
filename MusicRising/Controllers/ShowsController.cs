@@ -46,9 +46,6 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var userId = _userManager.GetUserId(User);
-            var isOwner = show.Venue.IdentityUserId == userId;
-
             // Convert Show to ShowVM
             var showVM = new ShowVM
             {
@@ -63,7 +60,7 @@ namespace MusicRising.Controllers
                 ShowFee = show.ShowFee,
                 BandFee = show.BandFee,
                 Payed = show.Payed,
-                IsOwner = isOwner // Check if the current user is the owner of the venue
+                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User) // Add this line
             };
 
             return View(showVM);
@@ -76,8 +73,6 @@ namespace MusicRising.Controllers
         }
 
         // POST: Shows/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShowVM show)
@@ -104,6 +99,41 @@ namespace MusicRising.Controllers
         }
 
         // GET: Shows/Edit/5
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
+            if (show == null)
+            {
+                return NotFound();
+            }
+
+            // Convert Show to ShowVM
+            var showVM = new ShowVM
+            {
+                ShowId = show.ShowId,
+                VenueId = show.VenueId,
+                Venue = show.Venue,
+                BandId = show.BandId,
+                HeadLiner = show.HeadLiner,
+                Genre = show.Genre,
+                Date = show.Date,
+                PromoItem = show.PromoLink,
+                ShowFee = show.ShowFee,
+                BandFee = show.BandFee,
+                Payed = show.Payed,
+                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User) // Add this line
+            };
+
+            ViewData["VenueId"] = new SelectList(_showsService.GetAll(), "VenueId", "VenueName", show.VenueId);
+            ViewData["BandId"] = new SelectList(_showsService.GetAll(), "BandId", "BandName", show.BandId);
+            return View(showVM);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, ShowVM showVM)
@@ -113,17 +143,16 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var userId = _userManager.GetUserId(User);
-            var show = await _showsService.GetAll().Include(s => s.Venue).FirstOrDefaultAsync(s => s.ShowId == id);
-            if (show == null || show.Venue.IdentityUserId != userId)
-            {
-                return Forbid();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
+                    if (show == null)
+                    {
+                        return NotFound();
+                    }
+
                     show.VenueId = showVM.VenueId;
                     show.BandId = showVM.BandId;
                     show.Genre = showVM.Genre;
@@ -153,7 +182,6 @@ namespace MusicRising.Controllers
             return View(showVM);
         }
 
-
         // GET: Shows/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -171,6 +199,12 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
+            var userId = _userManager.GetUserId(User);
+            if (show.Venue.IdentityUserId != userId)
+            {
+                return Forbid();
+            }
+
             return View(show);
         }
 
@@ -182,6 +216,12 @@ namespace MusicRising.Controllers
             var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
             if (show != null)
             {
+                var userId = _userManager.GetUserId(User);
+                if (show.Venue.IdentityUserId != userId)
+                {
+                    return Forbid();
+                }
+
                 await _showsService.Delete(show);
             }
 

@@ -1,58 +1,39 @@
-@model MusicRising.Models.Band
+@model MusicRising.Models.BandVM
 
 @{
-    ViewData["Title"] = "Delete";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+ViewData["Title"] = "Delete Band";
+Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Delete</h1>
+<h1>Delete Band</h1>
 
-<h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Band</h4>
+    <h4>Are you sure you want to delete this band?</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
+        <dt class="col-sm-2">
+            Band Name
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
+        <dd class="col-sm-10">
+            @Model.BandName
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BandName)
+        <dt class="col-sm-2">
+            Location
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BandName)
+        <dd class="col-sm-10">
+            @Model.Location
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BandPicture)
+        <dt class="col-sm-2">
+            Genre
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BandPicture)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BankAccount)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BankAccount)
+        <dd class="col-sm-10">
+            @Model.Genre
         </dd>
     </dl>
-    
-    <form asp-action="Delete">
+
+    <form asp-action="DeleteConfirmed" method="post">
         <input type="hidden" asp-for="BandId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

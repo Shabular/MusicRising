@@ -26,8 +26,6 @@ namespace MusicRising.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // the webhost environment is to save the images
-
         // GET: Bands
         public async Task<IActionResult> Index()
         {
@@ -63,9 +61,6 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Check if the current user is the owner
-            var isOwner = band.IdentityUserId == _userManager.GetUserId(User);
-
             // Convert Band to BandVM
             var bandVM = new BandVM
             {
@@ -81,14 +76,12 @@ namespace MusicRising.Controllers
                 PromoItems = band.PromoItems,
                 Ratings = band.Ratings,
                 BankAccount = band.BankAccount,
-                IsOwner = isOwner // Add this line
+                IsOwner = band.IdentityUserId == _userManager.GetUserId(User)
             };
 
             return View(bandVM);
         }
 
-        
-        
         // GET: Bands/Create
         public IActionResult Create()
         {
@@ -97,8 +90,6 @@ namespace MusicRising.Controllers
         }
 
         // POST: Bands/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BandVM band)
@@ -109,7 +100,7 @@ namespace MusicRising.Controllers
 
                 var bandObj = new Band
                 {
-                    BandId = Guid.NewGuid().ToString(), // Generate identifier to be used as bandd,
+                    BandId = Guid.NewGuid().ToString(),
                     IdentityUserId = band.IdentityUserId,
                     User = band.User,
                     BandName = band.BandName,
@@ -150,11 +141,12 @@ namespace MusicRising.Controllers
                 PictureUrl = band.BandPicture,
                 Location = band.Location,
                 Genre = band.Genre,
-                BankAccount = band.BankAccount
+                BankAccount = band.BankAccount,
+                IsOwner = band.IdentityUserId == _userManager.GetUserId(User)
             };
 
             ViewBag.Title = "Band";
-            return View(bandVM);
+            return View("_EntityEdit", bandVM);
         }
 
         // POST: Bands/Edit/5
@@ -204,7 +196,7 @@ namespace MusicRising.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Title = "Band";
-            return View(bandVM);
+            return View("_EntityEdit", bandVM);
         }
 
         // GET: Bands/Delete/5
@@ -217,7 +209,7 @@ namespace MusicRising.Controllers
 
             var band = await _bandsService.GetAll()
                 .Include(b => b.User)
-                .FirstOrDefaultAsync(m => m.BandId == id);
+                .FirstOrDefaultAsync(b => b.BandId == id);
             if (band == null)
             {
                 return NotFound();

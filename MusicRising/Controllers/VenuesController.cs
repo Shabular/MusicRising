@@ -34,7 +34,7 @@ namespace MusicRising.Controllers
             return View(venues);
         }
 
-        // GET: Venues/Landing
+        // GET: Bands/Landing
         public async Task<IActionResult> Landing()
         {
             var userId = _userManager.GetUserId(User);
@@ -61,9 +61,6 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            // Check if the current user is the owner
-            var isOwner = venue.IdentityUserId == _userManager.GetUserId(User);
-
             // Convert Venue to VenueVM
             var venueVM = new VenueVM
             {
@@ -79,7 +76,7 @@ namespace MusicRising.Controllers
                 PromoItems = venue.PromoItems,
                 Ratings = venue.Ratings,
                 BankAccount = venue.BankAccount,
-                IsOwner = isOwner // Add this line
+                IsOwner = venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
             return View(venueVM);
@@ -93,8 +90,6 @@ namespace MusicRising.Controllers
         }
 
         // POST: Venues/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(VenueVM venue)
@@ -146,18 +141,20 @@ namespace MusicRising.Controllers
                 PictureUrl = venue.VenuePicture,
                 Location = venue.Location,
                 Genre = venue.Genre,
-                BankAccount = venue.BankAccount
+                BankAccount = venue.BankAccount,
+                IsOwner = venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
             ViewBag.Title = "Venue";
             return View("_EntityEdit", venueVM);
         }
 
+        // POST: Venues/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, EntityEditVM venueVM)
+        public async Task<IActionResult> Edit(string id, VenueVM venueVM)
         {
-            if (id != venueVM.Id)
+            if (id != venueVM.VenueId)
             {
                 return NotFound();
             }
@@ -172,13 +169,13 @@ namespace MusicRising.Controllers
                         return NotFound();
                     }
 
-                    if (venueVM.Picture != null)
+                    if (venueVM.ImageFileName != null)
                     {
-                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venueVM.Picture);
+                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venueVM.Image);
                         venue.VenuePicture = filePath;
                     }
 
-                    venue.VenueName = venueVM.Name;
+                    venue.VenueName = venueVM.VenueName;
                     venue.Location = venueVM.Location;
                     venue.Genre = venueVM.Genre;
                     venue.BankAccount = venueVM.BankAccount;
@@ -187,7 +184,7 @@ namespace MusicRising.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VenueExists(venueVM.Id))
+                    if (!VenueExists(venueVM.VenueId))
                     {
                         return NotFound();
                     }

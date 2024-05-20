@@ -1,14 +1,19 @@
 @model MusicRising.Models.BandVM
 
+@{
+    ViewData["Title"] = "Band Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @Html.Partial("_Details", new {
-    Title = Model.BandName,
+    Title = Model.BandName ?? "Band Details",
     ImageFileName = Model.ImageFileName,
     Details = new Dictionary<string, string>
     {
+        {"Band Name", Model.BandName},
         {"Location", Model.Location.ToString()},
         {"Genre", Model.Genre.ToString()},
-        {"Bank Account", Model.BankAccount},
-        // Add other details as necessary
+        {"Bank Account", Model.BankAccount}
     },
     Id = Model.BandId,
     IsOwner = Model.IsOwner

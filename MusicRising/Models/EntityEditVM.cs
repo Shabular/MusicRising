@@ -18,6 +18,6 @@ namespace MusicRising.Models
         public LocationEnum Location { get; set; }
         public GenreEnum Genre { get; set; }
         public string BankAccount { get; set; }
-        public object IsOwner { get; set; }
+        public bool IsOwner { get; set; }
     }
 }

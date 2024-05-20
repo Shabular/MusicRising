@@ -1,5 +1,10 @@
 @model MusicRising.Models.ShowVM
 
+@{
+    ViewData["Title"] = "Show Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @Html.Partial("_Details", new {
     Title = Model.HeadLiner?.BandName ?? "Show Details",
     ImageFileName = Model.PromoItem,
