@@ -1,22 +1,161 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  background-color: #ECF0F1; /* Soft White */
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #2C3E50; /* Dark Slate Blue */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar-brand, .nav-link {
+  color: #FFFFFF !important; /* White */
+  font-weight: bold;
+}
+
+.navbar-toggler {
+  border-color: #BDC3C7; /* Light Slate Gray */
+}
+
+.navbar-toggler-icon {
+  color: #FFFFFF; /* White */
+}
+
+.selection-bar {
+  background-color: #2C3E50; /* Dark Slate Blue */
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: sticky;
+  top: 50px;
+  z-index: 999;
+  color: #FFFFFF; /* White */
+}
+
+.selection-bar .dropdown {
+  flex: 1;
+  text-align: center;
+}
+
+.selection-bar .divider {
+  height: 30px;
+  width: 1px;
+  background-color: #FFFFFF; /* White */
+  margin: 0 10px;
+}
+
+.selection-bar .dropdown-toggle {
+  background-color: transparent;
+  border: none;
+  color: #FFFFFF; /* White */
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.selection-bar .dropdown-toggle:hover {
+  color: #FFD700; /* Bright Yellow */
+}
+
+.dropdown-menu {
+  background-color: #2C3E50; /* Dark Slate Blue */
+}
+
+.dropdown-item {
+  color: #FFFFFF; /* White */
+}
+
+.dropdown-item:hover {
+  background-color: #FFD700; /* Bright Yellow */
+  color: #2C3E50; /* Dark Slate Blue */
+}
+
+.card-view {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.card {
+  background-color: #FFFFFF; /* White */
+  border: 1px solid #BDC3C7; /* Light Slate Gray */
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  width: 45%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+  font-size: 18px;
+  color: #2C3E50; /* Charcoal */
+  font-weight: bold;
+}
+
+.card-details {
+  font-size: 14px;
+  color: #2C3E50; /* Charcoal */
+}
+
+.bottom-nav {
+  background-color: #2C3E50; /* Dark Slate Blue */
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  z-index: 1000;
+  color: #FFFFFF; /* White */
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: #FFFFFF; /* White */
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  text-decoration: none; /* Ensure links have no underline */
+}
+
+.nav-btn:hover {
+  color: #FFD700; /* Bright Yellow */
+}
+
+.footer {
+  background-color: #BDC3C7; /* Light Slate Gray */
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: #2C3E50; /* Charcoal */
+}
+
+.login-btn {
+  background-color: #A35400; /* Really Dark Orange */
+  color: #FFFFFF; /* White */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #8B4500; /* Darker shade of Really Dark Orange */
 }
