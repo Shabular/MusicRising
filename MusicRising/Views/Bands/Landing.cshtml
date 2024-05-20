@@ -10,14 +10,20 @@
 @if (Model.Any())
 {
     <p>Select a band to manage:</p>
-    <ul>
-        @foreach (var band in Model)
-        {
-            <li>
-                <a asp-action="Details" asp-route-id="@band.BandId">@band.BandName</a>
-            </li>
-        }
-    </ul>
+    <div class="container">
+        <div class="row">
+            @foreach (var band in Model) {
+                <div class="col-md-4 d-flex align-items-stretch">
+                    @Html.Partial("_Card", new {
+                        ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("~/Images/default.png"),
+                        Title = band.BandName,
+                        Description = $"{band.Genre} | {band.Location}",
+                        Id = band.BandId
+                    })
+                </div>
+            }
+        </div>
+    </div>
 }
 else
 {

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MusicRising.Data;
 using MusicRising.Data.Services;
 using MusicRising.Models;
 
@@ -17,9 +16,10 @@ namespace MusicRising.Controllers
         private readonly IShowsService _showsService;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public ShowsController(IShowsService showsService)
+        public ShowsController(IShowsService showsService, UserManager<IdentityUser> userManager)
         {
             _showsService = showsService;
+            _userManager = userManager;
         }
 
         // GET: Shows
@@ -29,7 +29,7 @@ namespace MusicRising.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-/*      // GET: Shows/Details/5
+        // GET: Shows/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -37,21 +37,39 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var show = await _context.Shows
-                .Include(s => s.HeadLiner)
+            var show = await _showsService.GetAll()
                 .Include(s => s.Venue)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(s => s.HeadLiner)
+                .FirstOrDefaultAsync(s => s.ShowId == id);
             if (show == null)
             {
                 return NotFound();
             }
 
-            return View(show);
+            var userId = _userManager.GetUserId(User);
+            var isOwner = show.Venue.IdentityUserId == userId;
+
+            // Convert Show to ShowVM
+            var showVM = new ShowVM
+            {
+                ShowId = show.ShowId,
+                VenueId = show.VenueId,
+                Venue = show.Venue,
+                BandId = show.BandId,
+                HeadLiner = show.HeadLiner,
+                Genre = show.Genre,
+                Date = show.Date,
+                PromoItem = show.PromoLink,
+                ShowFee = show.ShowFee,
+                BandFee = show.BandFee,
+                Payed = show.Payed,
+                IsOwner = isOwner // Check if the current user is the owner of the venue
+            };
+
+            return View(showVM);
         }
 
         // GET: Shows/Create
-*/
-        // for now we use this by inputing it but this will be done when a show is accepted by a band
         public IActionResult Create()
         {
             return View();
@@ -60,70 +78,66 @@ namespace MusicRising.Controllers
         // POST: Shows/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
-         /*[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ShowVM show)
         {
-            if (show.BandId != null )
+            if (show.BandId != null)
             {
                 var showObj = new Show
                 {
+                    ShowId = Guid.NewGuid().ToString(),
                     VenueId = show.VenueId,
                     BandId = show.BandId,
                     Genre = show.Genre,
                     Date = show.Date,
-                    BandFee = show.BandFee
+                    PromoLink = show.PromoItem,
+                    ShowFee = show.ShowFee,
+                    BandFee = show.BandFee,
+                    Payed = show.Payed
                 };
                 await _showsService.Add(showObj);
-                return RedirectToAction("Index");  
+                return RedirectToAction("Index");
             }
 
-            return View(show);
-
-        }*/
-       
-/*
-        // GET: Shows/Edit/5
-        public async Task<IActionResult> Edit(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var show = await _context.Shows.FindAsync(id);
-            if (show == null)
-            {
-                return NotFound();
-            }
-            ViewData["Id"] = new SelectList(_context.Bands, "Id", "Id", show.Id);
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Id", show.VenueId);
             return View(show);
         }
 
-        // POST: Shows/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // GET: Shows/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,VenueId,BandID,Genre,Date,PromoLink,ShowFee")] Show show)
+        public async Task<IActionResult> Edit(string id, ShowVM showVM)
         {
-            if (id != show.Id)
+            if (id != showVM.ShowId)
             {
                 return NotFound();
+            }
+
+            var userId = _userManager.GetUserId(User);
+            var show = await _showsService.GetAll().Include(s => s.Venue).FirstOrDefaultAsync(s => s.ShowId == id);
+            if (show == null || show.Venue.IdentityUserId != userId)
+            {
+                return Forbid();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(show);
-                    await _context.SaveChangesAsync();
+                    show.VenueId = showVM.VenueId;
+                    show.BandId = showVM.BandId;
+                    show.Genre = showVM.Genre;
+                    show.Date = showVM.Date;
+                    show.PromoLink = showVM.PromoItem;
+                    show.ShowFee = showVM.ShowFee;
+                    show.BandFee = showVM.BandFee;
+                    show.Payed = showVM.Payed;
+
+                    await _showsService.Update(show);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ShowExists(show.Id))
+                    if (!ShowExists(showVM.ShowId))
                     {
                         return NotFound();
                     }
@@ -134,10 +148,11 @@ namespace MusicRising.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Id"] = new SelectList(_context.Bands, "Id", "Id", show.Id);
-            ViewData["VenueId"] = new SelectList(_context.Venues, "Id", "Id", show.VenueId);
-            return View(show);
+            ViewData["VenueId"] = new SelectList(_showsService.GetAll(), "VenueId", "VenueName", showVM.VenueId);
+            ViewData["BandId"] = new SelectList(_showsService.GetAll(), "BandId", "BandName", showVM.BandId);
+            return View(showVM);
         }
+
 
         // GET: Shows/Delete/5
         public async Task<IActionResult> Delete(string id)
@@ -147,10 +162,10 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var show = await _context.Shows
+            var show = await _showsService.GetAll()
                 .Include(s => s.HeadLiner)
                 .Include(s => s.Venue)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(s => s.ShowId == id);
             if (show == null)
             {
                 return NotFound();
@@ -164,19 +179,18 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var show = await _context.Shows.FindAsync(id);
+            var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
             if (show != null)
             {
-                _context.Shows.Remove(show);
+                await _showsService.Delete(show);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ShowExists(string id)
         {
-            return _context.Shows.Any(e => e.Id == id);
-        }*/
+            return _showsService.GetAll().Any(e => e.ShowId == id);
+        }
     }
 }

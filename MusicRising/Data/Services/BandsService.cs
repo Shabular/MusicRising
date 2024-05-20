@@ -38,5 +38,13 @@ public class BandsService : IBandsService
         await _context.SaveChangesAsync();
     }
 
-   
+    public Task Delete(Band band)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Update(Band band)
+    {
+        throw new NotImplementedException();
+    }
 }

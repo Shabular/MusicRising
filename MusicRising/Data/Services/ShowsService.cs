@@ -25,4 +25,14 @@ public class ShowsService : IShowsService
         _context.Shows.Add(show);
         await _context.SaveChangesAsync();
     }
+
+    public Task Delete(Show show)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Update(Show show)
+    {
+        throw new NotImplementedException();
+    }
 }

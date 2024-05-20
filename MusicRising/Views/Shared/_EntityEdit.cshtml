@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using MusicRising.Helpers
+@model MusicRising.Models.EntityEditVM
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Edit @Model.Name</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="IdentityUserId" class="control-label">User</label>
+                    <input asp-for="IdentityUserId" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Picture" class="control-label">Picture</label>
+                    @if (!string.IsNullOrEmpty(Model.PictureUrl))
+                    {
+                    <div class="mb-2">
+                        <img src="~/Images/@Model.PictureUrl" alt="@Model.Name" class="img-fluid" style="max-height: 200px; border-radius: 10px;">
+                    </div>
+                    }
+                    <input asp-for="Picture" class="form-control" type="file" accept="image/*" />
+                    <span asp-validation-for="Picture" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Location" class="control-label">Location</label>
+                    <select asp-for="Location" class="form-control" asp-items="Html.GetEnumSelectList<LocationEnum>()"></select>
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Genre" class="control-label">Genre</label>
+                    <select asp-for="Genre" class="form-control" asp-items="Html.GetEnumSelectList<GenreEnum>()"></select>
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BankAccount" class="control-label">Bank Account</label>
+                    <input asp-for="BankAccount" class="form-control" />
+                    <span asp-validation-for="BankAccount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

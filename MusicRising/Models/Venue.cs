@@ -25,7 +25,7 @@ public class Venue
     
     public string? VenuePicture { get; set; }
 
-    public string BankAccount { get; private set;}  // Made public getter for external access if needed
+    public string BankAccount { get; set;}  // Made public getter for external access if needed
     public GenreEnum Genre { get; set;}
     public List<Rating>? Ratings { get; set;}
 }

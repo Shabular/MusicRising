@@ -5,24 +5,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>The Band</h1>
-<h1>@Model.Count </h1>
-@foreach (var band in Model) {
-    <div class="container" style="background-color: rgba(138, 129, 0, 0.6); margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
-        <div class="row">
-            <div class="col col-xs-6 col-lg-5">
-                <!--If there is no show.promolink to a promo item, we put the name of the headliner here-->
-                <img src="@band.BandPicture" alt="@band.BandName">
+<div class="container">
+    <div class="row">
+        @foreach (var band in Model) {
+            <div class="col-md-4 d-flex align-items-stretch">
+                @Html.Partial("_Card", new {
+                    ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("~/Images/default.png"),
+                    Title = band.BandName,
+                    Description = $"{band.Genre} | {band.Location}",
+                    Id = band.BandId
+                })
             </div>
-            <div class="col col-xs-6 col-lg-5">
-                <h5>"@band.BandName"</h5>
-            </div>
-            <div class="col col-xs-6 col-lg-5">
-                <h5><a asp-action="Details" asp-route-id="@band.Genre" style="color: black">@band.Genre</a></h5>
-            </div>
-        </div>
+        }
     </div>
-}
+</div>
 
 @if (!Model.Any())
 {

@@ -1,56 +1,52 @@
-@model MusicRising.Models.Show
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using MusicRising.Helpers
+@model MusicRising.Models.ShowVM
 
 @{
-    ViewData["Title"] = "Edit";
+ViewData["Title"] = "Edit Show";
+Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit</h1>
-
-<h4>Show</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ShowId" />
-            <div class="form-group">
-                <label asp-for="VenueId" class="control-label"></label>
-                <select asp-for="VenueId" class="form-control" asp-items="ViewBag.VenueId"></select>
-                <span asp-validation-for="VenueId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BandId" class="control-label"></label>
-                <input asp-for="BandId" class="form-control" />
-                <span asp-validation-for="BandId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Genre" class="control-label"></label>
-                <select asp-for="Genre" class="form-control"></select>
-                <span asp-validation-for="Genre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PromoLink" class="control-label"></label>
-                <input asp-for="PromoLink" class="form-control" />
-                <span asp-validation-for="PromoLink" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShowFee" class="control-label"></label>
-                <input asp-for="ShowFee" class="form-control" />
-                <span asp-validation-for="ShowFee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3>Edit Show</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="VenueId" class="control-label">Venue</label>
+                    <input asp-for="VenueId" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label asp-for="BandId" class="control-label">Headliner Band</label>
+                    <input asp-for="BandId" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Date" class="control-label">Date</label>
+                    <input asp-for="Date" class="form-control" type="date" />
+                    <span asp-validation-for="Date" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Genre" class="control-label">Genre</label>
+                    <select asp-for="Genre" class="form-control" asp-items="Html.GetEnumSelectList<GenreEnum>()"></select>
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ShowFee" class="control-label">Show Fee</label>
+                    <input asp-for="ShowFee" class="form-control" />
+                    <span asp-validation-for="ShowFee" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PromoLink" class="control-label">Promo Link</label>
+                    <input asp-for="PromoLink" class="form-control" />
+                    <span asp-validation-for="PromoLink" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

@@ -10,7 +10,6 @@
 
 <h2>Create a band</h2>
 
-<h4>Band</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -31,12 +30,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
+                @Html.DropDownListFor(model => model.Location, new SelectList(Enum.GetValues(typeof(MusicRising.Helpers.LocationEnum)).Cast<MusicRising.Helpers.LocationEnum>().Select(e => new SelectListItem { Text = e.ToString(), Value = e.ToString() }), "Value", "Text"), "Select Location", new { @class = "form-control" })
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Genre" class="control-label"></label>
-                <input asp-for="Genre" class="form-control" />
+                @Html.DropDownListFor(model => model.Genre, new SelectList(Enum.GetValues(typeof(MusicRising.Helpers.GenreEnum)).Cast<MusicRising.Helpers.GenreEnum>().Select(e => new SelectListItem { Text = e.ToString(), Value = e.ToString() }), "Value", "Text"), "Select Genre", new { @class = "form-control" })
                 <span asp-validation-for="Genre" class="text-danger"></span>
             </div>
             <div class="form-group">

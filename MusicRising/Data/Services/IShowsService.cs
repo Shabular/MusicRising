@@ -9,4 +9,6 @@ public interface IShowsService
 
     Task Add(Show show);
 
+    Task Delete(Show show);
+    Task Update(Show show);
 }

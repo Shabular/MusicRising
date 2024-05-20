@@ -8,25 +8,21 @@
 
 <h1>Comming Shows</h1>
 
-@foreach (var Show in Model)
-{
-    <div class="container" style="background-color: rgba(138,129,0.6); margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
-        <div class="row">
-            <div class="col col-xs-6 col-lg-5">
-                <!--If there is no show.promolink to a promo item, we put the name of the headliner here-->
-                <img src="@Show.PromoLink" alt="@Show.HeadLiner.BandName">
-            </div>
-            <div class="col col-xs-6 col-lg-5">
-                <h5><a asp-action="Details" asp-route-id="@Show.ShowId" style="color: black"></a></h5>
-                <div>Watch: $@Show.HeadLiner</div>
-                <div>At: $@Show.Venue</div>
-                <div>@Show.Date.ToString(CultureInfo.InvariantCulture)</div>
-            </div>
-            
+<div class="container">
+    <div class="row">
+        @foreach (var show in Model) {
+        <div class="col-md-4 d-flex align-items-stretch">
+            ImageUrl = show.PromoLink  != null ? Url.Content($"{show.PromoLink}") : Url.Content("~/Images/default.png"),
+            Title = show.HeadLiner.BandName,
+            Description = $"{show.Genre} | {show.Venue.Location}",
+            Id = show.ShowFee
+            })
         </div>
+        }
     </div>
-    
-}
+</div>
+
+
 
 @if (!Model.Any())
 {

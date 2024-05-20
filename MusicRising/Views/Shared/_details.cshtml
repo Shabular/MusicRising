@@ -1,0 +1,31 @@
+﻿@model dynamic
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header d-flex align-items-center p-0" style="height: auto;">
+            <h3 class="ms-3 mb-0">@Model.Title</h3>
+            @if (Model.ImageFileName != null)
+            {
+                <img src="~/Images/@Model.ImageFileName" alt="@Model.Title" class="img-fluid" style="border-radius: 10px; max-height: 180px; object-fit: cover;">
+            }
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <dl class="row">
+                        @foreach (var detail in Model.Details)
+                        {
+                            <dt class="col-sm-4">@detail.Key</dt>
+                            <dd class="col-sm-8">@detail.Value</dd>
+                        }
+                    </dl>
+                    @if (Model.IsOwner)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                    }
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

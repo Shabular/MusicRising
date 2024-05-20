@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MusicRising.Data;
 using MusicRising.Data.Services;
+using MusicRising.Helpers;
 using MusicRising.Models;
 
 namespace MusicRising.Controllers
@@ -26,6 +26,8 @@ namespace MusicRising.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        // the webhost environment is to save the images
+
         // GET: Bands
         public async Task<IActionResult> Index()
         {
@@ -33,7 +35,7 @@ namespace MusicRising.Controllers
             Debug.WriteLine($"Found {bands.Count} bands in the Index method.");
             return View(bands);
         }
-        
+
         // GET: Bands/Landing
         public async Task<IActionResult> Landing()
         {
@@ -44,9 +46,8 @@ namespace MusicRising.Controllers
 
             return View(userBands);
         }
-        
 
-        // GET: Bands/Details/5
+        // Details about a band needed a viewmodel
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -62,9 +63,32 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            return View(band);
+            // Check if the current user is the owner
+            var isOwner = band.IdentityUserId == _userManager.GetUserId(User);
+
+            // Convert Band to BandVM
+            var bandVM = new BandVM
+            {
+                BandId = band.BandId,
+                IdentityUserId = band.IdentityUserId,
+                User = band.User,
+                BandName = band.BandName,
+                Image = null, // Assuming the image upload is not needed here, you may need to handle this differently
+                ImageFileName = band.BandPicture,
+                Location = band.Location,
+                Genre = band.Genre,
+                Shows = band.Shows,
+                PromoItems = band.PromoItems,
+                Ratings = band.Ratings,
+                BankAccount = band.BankAccount,
+                IsOwner = isOwner // Add this line
+            };
+
+            return View(bandVM);
         }
 
+        
+        
         // GET: Bands/Create
         public IActionResult Create()
         {
@@ -81,17 +105,8 @@ namespace MusicRising.Controllers
         {
             if (band.Image != null)
             {
-                // get the filnamen and add to the foldername to create a place to store band/venue pics
-                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
-                string fileName = Guid.NewGuid().ToString() + "_" + band.Image.FileName; // this is used to be able to have multiple same filenames just in case
-                string filePath = Path.Combine(uploadDir, fileName);
+                string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, band.Image);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    band.Image.CopyTo(fileStream);
-                }
-
-                Debug.WriteLine(band);
                 var bandObj = new Band
                 {
                     BandId = Guid.NewGuid().ToString(), // Generate identifier to be used as bandd,
@@ -103,15 +118,15 @@ namespace MusicRising.Controllers
                     Genre = band.Genre,
                     BankAccount = band.BankAccount
                 };
-                
+
                 await _bandsService.Add(bandObj);
-                
+
                 return RedirectToAction("Index");
             }
             ViewData["IdentityUserId"] = new SelectList(_userManager.Users, "Id", "Id", band.IdentityUserId);
             return View(band);
         }
-/*p
+
         // GET: Bands/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -120,23 +135,34 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var band = await _context.Bands.FindAsync(id);
+            var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
             if (band == null)
             {
                 return NotFound();
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", band.IdentityUserId);
-            return View(band);
+
+            // Convert Band to EntityEditVM
+            var bandVM = new EntityEditVM
+            {
+                Id = band.BandId,
+                IdentityUserId = band.IdentityUserId,
+                Name = band.BandName,
+                PictureUrl = band.BandPicture,
+                Location = band.Location,
+                Genre = band.Genre,
+                BankAccount = band.BankAccount
+            };
+
+            ViewBag.Title = "Band";
+            return View(bandVM);
         }
 
         // POST: Bands/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("BandId,IdentityUserId,BandName,BandPicture,Location,Genre,BankAccount")] Band band)
+        public async Task<IActionResult> Edit(string id, EntityEditVM bandVM)
         {
-            if (id != band.BandId)
+            if (id != bandVM.Id)
             {
                 return NotFound();
             }
@@ -145,12 +171,28 @@ namespace MusicRising.Controllers
             {
                 try
                 {
-                    _context.Update(band);
-                    await _context.SaveChangesAsync();
+                    var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
+                    if (band == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (bandVM.Picture != null)
+                    {
+                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, bandVM.Picture);
+                        band.BandPicture = filePath;
+                    }
+
+                    band.BandName = bandVM.Name;
+                    band.Location = bandVM.Location;
+                    band.Genre = bandVM.Genre;
+                    band.BankAccount = bandVM.BankAccount;
+
+                    await _bandsService.Update(band);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BandExists(band.BandId))
+                    if (!BandExists(bandVM.Id))
                     {
                         return NotFound();
                     }
@@ -161,8 +203,8 @@ namespace MusicRising.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", band.IdentityUserId);
-            return View(band);
+            ViewBag.Title = "Band";
+            return View(bandVM);
         }
 
         // GET: Bands/Delete/5
@@ -173,7 +215,7 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var band = await _context.Bands
+            var band = await _bandsService.GetAll()
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(m => m.BandId == id);
             if (band == null)
@@ -189,19 +231,18 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var band = await _context.Bands.FindAsync(id);
+            var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
             if (band != null)
             {
-                _context.Bands.Remove(band);
+                await _bandsService.Delete(band);
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool BandExists(string id)
         {
-            return _context.Bands.Any(e => e.BandId == id);
-        }*/
+            return _bandsService.GetAll().Any(e => e.BandId == id);
+        }
     }
 }

@@ -7,22 +7,23 @@
 
 <h1>Find a Venue</h1>
 
-@foreach (var Venue in Model) {
-    <div class="container" style="background-color: rgba(138, 129, 0, 0.6); margin-top: 50px; margin-bottom: 50px; padding: 20px; border-radius: 10px;">
-        <div class="row">
-            <div class="col col-xs-6 col-lg-5">
-                <!--If there is no show.promolink to a promo item, we put the name of the headliner here-->
-                <img src="@Venue.VenuePicture" alt="@Venue.VenueName">
+
+<div class="container">
+    <div class="row">
+        @foreach (var Venue in Model) {
+            <div class="col-md-4 d-flex align-items-stretch">
+                @Html.Partial("_Card", new {
+                ImageUrl = Venue.VenuePicture != null ? Url.Content($"{Venue.VenuePicture}") : Url.Content("~/Images/default.png"),
+                Title = Venue.VenueName,
+                Description = $"{Venue.Genre} | {Venue.Location}",
+                Id = Venue.VenueId
+                })
             </div>
-            <div class="col col-xs-6 col-lg-5">
-                <h5>"@Venue.VenueName"</h5>
-            </div>
-            <div class="col col-xs-6 col-lg-5">
-                <h5><a asp-action="Details" asp-route-id="@Venue.Genre" style="color: black">@Venue.Genre</a></h5>
-            </div>
-        </div>
+        }
     </div>
-}
+</div>
+
+
 
 @if (!Model.Any())
 {
