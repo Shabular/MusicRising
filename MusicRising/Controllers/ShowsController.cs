@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicRising.Data.Services;
+using MusicRising.Helpers;
 using MusicRising.Models;
 
 namespace MusicRising.Controllers
@@ -14,12 +15,17 @@ namespace MusicRising.Controllers
     public class ShowsController : Controller
     {
         private readonly IShowsService _showsService;
+        private readonly IBandsService _bandsService;
+        private readonly IVenuesService _venuesService;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly DebugHelper _debugHelper = new DebugHelper();
 
-        public ShowsController(IShowsService showsService, UserManager<IdentityUser> userManager)
+        public ShowsController(IShowsService showsService, IBandsService bandsService, UserManager<IdentityUser> userManager, IVenuesService venuesService)
         {
             _showsService = showsService;
             _userManager = userManager;
+            _bandsService = bandsService;
+            _venuesService = venuesService;
         }
 
         // GET: Shows
@@ -66,26 +72,68 @@ namespace MusicRising.Controllers
         }
 
         // GET: Shows/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(Band band)
         {
-            return View();
+            string bandID = band.BandId;
+            _debugHelper.DebugWriteLine("In book show");
+            _debugHelper.DebugWriteLine("bandID = " + bandID);
+            
+            // we are here bandID is not null anymore!!
+            if (bandID == null)
+            {
+                return NotFound();
+            }
+
+            string userID = _userManager.GetUserId(User);
+
+            
+            var venue = await _venuesService.GetAll().FirstOrDefaultAsync(v => v.IdentityUserId == userID);
+            
+            if ((band == null) | (venue == null))
+            {
+                _debugHelper.DebugWriteLine("band or venue was null" );
+                return NotFound();
+            }
+
+            _debugHelper.DebugWriteLine("create show vm");
+            // create a show item and fill with everything of the show and venue
+            var showVM = new ShowVM(){
+                ShowId = Guid.NewGuid().ToString(),
+                VenueId = venue.VenueId,
+                BandId = band.BandId,
+                Genre = band.Genre,
+                Date = DateTime.Now,
+                PromoLink = null,
+                ShowFee = null,
+                Payed=  false
+            };
+            _debugHelper.DebugWriteLine("show vm created");
+
+            _debugHelper.DebugWriteLine("In create show");
+            _debugHelper.DebugWriteLine("bandID = " + showVM.BandId);
+            return View(showVM);
         }
 
         // POST: Shows/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ShowVM show)
+        public async Task<IActionResult> Create(ShowVM show, String userID )
         {
+            _debugHelper.DebugWriteLine("In create show");
+            _debugHelper.DebugWriteLine("bandID = " + show.BandId);
+            
+            
+            // we are herethe form is submitted and something is put in the database
             if (show.BandId != null)
             {
                 var showObj = new Show
                 {
-                    ShowId = Guid.NewGuid().ToString(),
+                    ShowId = show.ShowId,
                     VenueId = show.VenueId,
                     BandId = show.BandId,
                     Genre = show.Genre,
                     Date = show.Date,
-                    PromoLink = show.PromoItem,
+                    PromoLink = show.PromoLink,
                     ShowFee = show.ShowFee,
                     BandFee = show.BandFee,
                     Payed = show.Payed
@@ -135,6 +183,8 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, ShowVM showVM)
         {
+            
+            
             if (id != showVM.ShowId)
             {
                 return NotFound();
@@ -180,6 +230,8 @@ namespace MusicRising.Controllers
         // GET: Shows/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+            
+            
             if (id == null)
             {
                 return NotFound();

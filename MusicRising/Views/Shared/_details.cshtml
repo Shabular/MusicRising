@@ -1,4 +1,5 @@
-﻿@model dynamic
+﻿@using Microsoft.AspNetCore.Identity
+@model dynamic
 
 <div class="container mt-4">
     <div class="card">
@@ -22,6 +23,11 @@
                     @if (Model.IsOwner)
                     {
                         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                    }
+
+                    @if (Model.BookableLink)
+                    {
+                        <a asp-action="BookShow" asp-route-bandID="@Model.Id" class="btn btn-primary">Book us</a>
                     }
                     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                 </div>

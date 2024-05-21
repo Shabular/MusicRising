@@ -15,7 +15,7 @@ public class ShowVM
     public string PromoItem { get; set; }
     public string? PromoLink { get; set; }
     public double? ShowFee { get; set; }
-    public double BandFee { get; set; }
+    public double BandFee { get; set; } = 50.00;
     public bool Payed { get; set; }
     public bool IsOwner { get; set; } // Add this property
 }

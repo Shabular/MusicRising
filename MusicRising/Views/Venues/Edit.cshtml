@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 @Html.Partial("_EntityEdit", new MusicRising.Models.EntityEditVM
 {
     Id = Model.VenueId,
@@ -16,3 +17,4 @@
     BankAccount = Model.BankAccount,
     IsOwner = Model.IsOwner
 })
+

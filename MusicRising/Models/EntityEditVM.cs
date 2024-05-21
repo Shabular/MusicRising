@@ -19,5 +19,6 @@ namespace MusicRising.Models
         public GenreEnum Genre { get; set; }
         public string BankAccount { get; set; }
         public bool IsOwner { get; set; }
+        public bool BookableLink { get; set; } = false;
     }
 }

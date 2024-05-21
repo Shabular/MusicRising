@@ -16,13 +16,15 @@ namespace MusicRising.Controllers
     public class BandsController : Controller
     {
         private readonly IBandsService _bandsService;
+        private readonly IVenuesService _venuesService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly DebugHelper _debugHelper = new DebugHelper();
 
-        public BandsController(IBandsService bandsService, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment)
+        public BandsController(IBandsService bandsService, UserManager<IdentityUser> userManager, IWebHostEnvironment webHostEnvironment, IVenuesService venuesService)
         {
             _bandsService = bandsService;
+            _venuesService = venuesService;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -144,7 +146,7 @@ namespace MusicRising.Controllers
     };
 
     ViewBag.Title = "Band";
-    return View("_EntityEdit", bandVM);
+    return RedirectToAction("Create", "Shows", new { bandVM = bandVM });
 }
 
 [HttpPost]
@@ -248,6 +250,16 @@ public async Task<IActionResult> Edit(string id, EntityEditVM bandVM)
 
             return RedirectToAction(nameof(Index));
         }
+        
+        
+        // GET: Bands/BookShow/5
+        public async Task<IActionResult> BookShow(string bandID)
+        {
+            var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == bandID);
+            ViewBag.Title = "Show";
+            return await Task.FromResult<IActionResult>(RedirectToAction("Create", "Shows", band));
+        }
+        
 
         private bool BandExists(string id)
         {
