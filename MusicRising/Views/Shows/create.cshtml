@@ -1,4 +1,4 @@
-@model MusicRising.Models.ShowVM
+@model MusicRising.Models.BookingVM
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<IdentityUser> UserManager
 
@@ -15,34 +15,44 @@ Layout = "~/Views/Shared/_Layout.cshtml";
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <input type="hidden" asp-for="ShowId" />
-            <input type="hidden" asp-for="VenueId" />
-            <input type="hidden" asp-for="BandId" />
+            <input type="hidden" asp-for="showVM.ShowId" />
+            <input type="hidden" asp-for="showVM.BandId" />
+            
+            <div class="form-group">
+                <label asp-for="showVM.PromoItem" class="control-label"></label>
+                <input asp-for="showVM.PromoItem" class="form-control" accept="image/*" style="width: 30%"/>
+                <span asp-validation-for="showVM.PromoItem" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="showVM.VenueId" class="control-label">Venue</label>
+                @Html.DropDownListFor(model => model.showVM.VenueId,
+                new SelectList(Model.venues, "VenueId", "VenueName"),
+                "Select Venue",
+                new { @class = "form-control" })
+                <span asp-validation-for="showVM.VenueId" class="text-danger"></span>
+            </div>
 
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+                <label asp-for="showVM.Genre" class="control-label"></label>
+                @Html.DropDownListFor(model => model.showVM.Genre, new SelectList(Enum.GetValues(typeof(MusicRising.Helpers.GenreEnum)).Cast<MusicRising.Helpers.GenreEnum>().Select(e => new SelectListItem { Text = e.ToString(), Value = e.ToString() }), "Value", "Text"), "Select Genre", new { @class = "form-control" })
+                <span asp-validation-for="showVM.Genre" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="showVM.Date" class="control-label"></label>
+                <input asp-for="showVM.Date" class="form-control" />
+                <span asp-validation-for="showVM.Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Genre" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Genre, new SelectList(Enum.GetValues(typeof(MusicRising.Helpers.GenreEnum)).Cast<MusicRising.Helpers.GenreEnum>().Select(e => new SelectListItem { Text = e.ToString(), Value = e.ToString() }), "Value", "Text"), "Select Genre", new { @class = "form-control" })
-                <span asp-validation-for="Genre" class="text-danger"></span>
+                <label asp-for="showVM.ShowFee" class="control-label"></label>
+                <input asp-for="showVM.ShowFee" class="form-control" />
+                <span asp-validation-for="showVM.ShowFee" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PromoItem" class="control-label"></label>
-                <input asp-for="PromoItem" class="form-control" />
-                <span asp-validation-for="PromoItem" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ShowFee" class="control-label"></label>
-                <input asp-for="ShowFee" class="form-control" />
-                <span asp-validation-for="ShowFee" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BandFee" class="control-label"></label>
-                <input asp-for="BandFee" class="form-control" />
-                <span asp-validation-for="BandFee" class="text-danger"></span>
+                <label asp-for="showVM.BandFee" class="control-label"></label>
+                <input asp-for="showVM.BandFee" class="form-control" />
+                <span asp-validation-for="showVM.BandFee" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

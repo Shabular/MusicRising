@@ -14,9 +14,9 @@
         {"Date", Model.Date.ToShortDateString()},
         {"Genre", Model.Genre.ToString()},
         {"Show Fee", Model.ShowFee.ToString()},
-        {"Promo Link", Model.PromoItem}
+        {"Promo Link", Model.PromoLink}
     },
     Id = Model.ShowId,
-    IsOwner = Model.IsOwner,
+    IsOwner = Model.IsVenueOwner,
     BookableLink = false
 })

@@ -10,9 +10,9 @@
     Id = Model.ShowId,
     IdentityUserId = Model.Venue.IdentityUserId,
     Name = Model.HeadLiner.BandName ?? "Show",
-    PictureUrl = Model.PromoItem,
+    PictureUrl = Model.PromoLink,
     Location = Model.Venue.Location,
     Genre = Model.Genre,
     BankAccount = Model.Venue.BankAccount,
-    IsOwner = Model.IsOwner
+    IsOwner = Model.IsVenueOwner
 })

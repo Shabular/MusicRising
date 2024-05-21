@@ -238,14 +238,14 @@ namespace MusicRising.Data.Migrations
                     b.Property<string>("BankAccount")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("Genre")
+                    b.Property<int>("Genre")
                         .HasColumnType("int");
 
                     b.Property<string>("IdentityUserId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<int?>("Location")
+                    b.Property<int>("Location")
                         .HasColumnType("int");
 
                     b.HasKey("BandId");
@@ -331,13 +331,19 @@ namespace MusicRising.Data.Migrations
                     b.Property<string>("BandId")
                         .HasColumnType("varchar(36)");
 
+                    b.Property<bool>("Booked")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("Genre")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Payed")
+                    b.Property<bool>("IsBandMember")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsVenueOwner")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("PromoLink")
