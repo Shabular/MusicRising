@@ -66,7 +66,12 @@ void SeedDatabase(IHost app)
         var venuesService = serviceScope.ServiceProvider.GetRequiredService<IVenuesService>();
         var showsService = serviceScope.ServiceProvider.GetRequiredService<IShowsService>();
 
-        var seeder = new DataSeeder(userManager, bandsService, venuesService, showsService);
-        seeder.SeedData().Wait();
+        // Check if users already exist
+        if (!userManager.Users.Any(u => u.UserName == "admin"))
+        {
+            var seeder = new DataSeeder(userManager, bandsService, venuesService, showsService);
+            seeder.SeedData().Wait();
+        }
+        
     }
 }
