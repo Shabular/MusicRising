@@ -19,7 +19,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-//build the services to in the application
+// Build the services to in the application
 builder.Services.AddScoped<IShowsService, ShowsService>();
 builder.Services.AddScoped<IBandsService, BandsService>();
 builder.Services.AddScoped<IVenuesService, VenuesService>();
@@ -31,12 +31,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    
     app.UseMigrationsEndPoint();
 }
 else
 {
-
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
@@ -54,4 +52,21 @@ app.MapControllerRoute(
     pattern: "{controller=Shows}/{action=Index}");
 app.MapRazorPages();
 
+// Seed the database
+SeedDatabase(app);
+
 app.Run();
+
+void SeedDatabase(IHost app)
+{
+    using (var serviceScope = app.Services.CreateScope())
+    {
+        var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var bandsService = serviceScope.ServiceProvider.GetRequiredService<IBandsService>();
+        var venuesService = serviceScope.ServiceProvider.GetRequiredService<IVenuesService>();
+        var showsService = serviceScope.ServiceProvider.GetRequiredService<IShowsService>();
+
+        var seeder = new DataSeeder(userManager, bandsService, venuesService, showsService);
+        seeder.SeedData().Wait();
+    }
+}

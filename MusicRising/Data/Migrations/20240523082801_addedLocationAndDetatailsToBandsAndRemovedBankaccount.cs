@@ -10,13 +10,6 @@ namespace MusicRising.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "BankAccount",
-                table: "Venues");
-
-            migrationBuilder.DropColumn(
-                name: "BankAccount",
-                table: "Bands");
 
             migrationBuilder.AddColumn<string>(
                 name: "Address",
@@ -55,19 +48,7 @@ namespace MusicRising.Data.Migrations
                 name: "Longitude",
                 table: "Bands");
 
-            migrationBuilder.AddColumn<string>(
-                name: "BankAccount",
-                table: "Venues",
-                type: "longtext",
-                nullable: false)
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.AddColumn<string>(
-                name: "BankAccount",
-                table: "Bands",
-                type: "longtext",
-                nullable: true)
-                .Annotation("MySql:CharSet", "utf8mb4");
+            
         }
     }
 }
