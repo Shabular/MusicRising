@@ -7,7 +7,7 @@
             <h3 class="ms-3 mb-0">@Model.Title</h3>
             @if (Model.ImageFileName != null)
             {
-                <img src="~/Images/@Model.ImageFileName" alt="@Model.Title" class="img-fluid" style="border-radius: 10px; max-height: 180px; object-fit: cover;">
+            <img src="~/Images/@Model.ImageFileName" alt="@Model.Title" class="img-fluid" style="border-radius: 10px; max-height: 180px; object-fit: cover;">
             }
         </div>
         <div class="card-body">
@@ -16,21 +16,27 @@
                     <dl class="row">
                         @foreach (var detail in Model.Details)
                         {
-                            <dt class="col-sm-4">@detail.Key</dt>
-                            <dd class="col-sm-8">@detail.Value</dd>
+                        <dt class="col-sm-4">@detail.Key</dt>
+                        <dd class="col-sm-8">@detail.Value</dd>
                         }
                     </dl>
                     @if (Model.IsOwner)
                     {
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
                     }
 
                     @if (Model.BookableLink)
                     {
-                        <a asp-action="BookShow" asp-route-bandID="@Model.Id" class="btn btn-primary">Book us</a>
+                    <a asp-action="BookShow" asp-route-bandID="@Model.Id" class="btn btn-primary">Book us</a>
                     }
                     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
                 </div>
+                @if (Model.Latitude != null && Model.Longitude != null)
+                {
+                <div class="col-md-4">
+                    <div id="map" style="height: 300px; width: 100%;"></div>
+                </div>
+                }
             </div>
         </div>
     </div>

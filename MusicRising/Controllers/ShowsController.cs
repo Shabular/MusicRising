@@ -352,6 +352,8 @@ namespace MusicRising.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        
+        
 
         private bool ShowExists(string id)
         {

@@ -23,12 +23,10 @@ public class Show
     public string? BandId { get; set; }  // Ensure this matches the ForeignKey attribute below
     [ForeignKey("BandId")]
     public Band? HeadLiner { get; set; }
-
-    // Assuming you want to store multiple bands, you would typically need another entity to handle this
-    // [NotMapped] Removed for now - consider using a many-to-many relationship if applicable
-
+    
     public GenreEnum Genre { get; set; }
     public DateTime Date { get; set; }
+    public string? Details { get; set; }
     public string? PromoLink { get; set; }
     public double? ShowFee { get; set; }
 

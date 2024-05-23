@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicRising.Data;
 
@@ -11,9 +12,11 @@ using MusicRising.Data;
 namespace MusicRising.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523070118_addedLocationAndDetailsToModels")]
+    partial class addedLocationAndDetailsToModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,14 +232,13 @@ namespace MusicRising.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(36)");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("BandName")
                         .HasColumnType("longtext");
 
                     b.Property<string>("BandPicture")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BankAccount")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Details")
@@ -249,14 +251,8 @@ namespace MusicRising.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("double");
-
                     b.Property<int>("Location")
                         .HasColumnType("int");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("double");
 
                     b.HasKey("BandId");
 
@@ -384,6 +380,10 @@ namespace MusicRising.Data.Migrations
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("BankAccount")
                         .IsRequired()
                         .HasColumnType("longtext");
 

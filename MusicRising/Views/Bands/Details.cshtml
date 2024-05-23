@@ -13,9 +13,31 @@
         {"Band Name", Model.BandName},
         {"Location", Model.Location.ToString()},
         {"Genre", Model.Genre.ToString()},
-        {"Bank Account", Model.BankAccount}
+        {"Address", Model.Address}
     },
     Id = Model.BandId,
     IsOwner = Model.IsOwner,
-    BookableLink = true
+    BookableLink = true,
+    Latitude = Model.Latitude,
+    Longitude = Model.Longitude
 })
+
+@section Scripts {
+    <script>
+        function initMap() {
+            var latitude = @Model.Latitude;
+            var longitude = @Model.Longitude;
+            var location = { lat: latitude, lng: longitude };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: location
+            });
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+        }
+
+        initMap();
+    </script>
+}
