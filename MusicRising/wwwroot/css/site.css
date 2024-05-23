@@ -1,36 +1,37 @@
 /* General styles */
 body {
-  background-color: #ECF0F1; /* Soft White */
+  background-color: #1C1C1C; /* Dark Background */
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
+  color: #E0E0E0; /* Light Gray Text */
 }
 
 /* Navbar styles */
 .navbar {
-  background-color: #2C3E50; /* Dark Slate Blue */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #2E2E2E; /* Dark Gray */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
 .navbar-brand, .nav-link {
-  color: #FFFFFF !important; /* White */
+  color: #E0E0E0 !important; /* Light Gray */
   font-weight: bold;
 }
 
 .navbar-toggler {
-  border-color: #BDC3C7; /* Light Slate Gray */
+  border-color: #7F7F7F; /* Gray */
 }
 
 .navbar-toggler-icon {
-  color: #FFFFFF; /* White */
+  color: #E0E0E0; /* Light Gray */
 }
 
 /* Selection bar styles */
 .selection-bar {
-  background-color: #2C3E50; /* Dark Slate Blue */
+  background-color: #2E2E2E; /* Dark Gray */
   padding: 10px 0;
   display: flex;
   justify-content: space-around;
@@ -38,7 +39,7 @@ body {
   position: sticky;
   top: 50px;
   z-index: 999;
-  color: #FFFFFF; /* White */
+  color: #E0E0E0; /* Light Gray */
 }
 
 .selection-bar .dropdown {
@@ -49,68 +50,68 @@ body {
 .selection-bar .divider {
   height: 30px;
   width: 1px;
-  background-color: #FFFFFF; /* White */
+  background-color: #E0E0E0; /* Light Gray */
   margin: 0 10px;
 }
 
 .selection-bar .dropdown-toggle {
   background-color: transparent;
   border: none;
-  color: #FFFFFF; /* White */
+  color: #E0E0E0; /* Light Gray */
   font-size: 16px;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .selection-bar .dropdown-toggle:hover {
-  color: #FFD700; /* Bright Yellow */
+  color: #FF0000; /* Red */
 }
 
 .dropdown-menu {
-  background-color: #2C3E50; /* Dark Slate Blue */
+  background-color: #2E2E2E; /* Dark Gray */
 }
 
 .dropdown-item {
-  color: #FFFFFF; /* White */
+  color: #E0E0E0; /* Light Gray */
 }
 
 .dropdown-item:hover {
-  background-color: #FFD700; /* Bright Yellow */
-  color: #2C3E50; /* Dark Slate Blue */
+  background-color: #FF0000; /* Red */
+  color: #2E2E2E; /* Dark Gray */
 }
 
 /* Card styles */
 .card {
-  background-color: #FFFFFF; /* White */
-  border: 1px solid #BDC3C7; /* Light Slate Gray */
+  background-color: #2E2E2E; /* Dark Gray */
+  border: 1px solid #7F7F7F; /* Gray */
   border-radius: 10px;
   padding: 20px;
   margin: 10px;
   width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .card-title {
   font-size: 1.25rem;
   margin-bottom: 10px;
-  color: #2C3E50; /* Charcoal */
+  color: #FF0000; /* Red */
   font-weight: bold;
 }
 
 .card-text {
   font-size: 1rem;
   margin-bottom: 15px;
-  color: #2C3E50; /* Charcoal */
+  color: #E0E0E0; /* Light Gray */
 }
 
 .card-img-top, .card-img-left {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #444; /* Darker Gray */
 }
 
 .card-body {
@@ -122,28 +123,28 @@ body {
 
 /* Button styles */
 .btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #FF0000; /* Red */
+  border-color: #FF0000;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #004085;
+  background-color: #B20000;
+  border-color: #800000;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
-  border-color: #6c757d;
+  background-color: #444; /* Darker Gray */
+  border-color: #444;
 }
 
 .btn-secondary:hover {
-  background-color: #5a6268;
-  border-color: #545b62;
+  background-color: #333;
+  border-color: #222;
 }
 
 /* Bottom nav styles */
 .bottom-nav {
-  background-color: #2C3E50; /* Dark Slate Blue */
+  background-color: #2E2E2E; /* Dark Gray */
   display: flex;
   justify-content: space-around;
   padding: 0; /* Remove padding */
@@ -151,13 +152,13 @@ body {
   bottom: 0;
   width: 100%;
   z-index: 1000;
-  color: #FFFFFF; /* White */
+  color: #E0E0E0; /* Light Gray */
 }
 
 .nav-btn {
   background: none;
   border: none;
-  color: #FFFFFF; /* White */
+  color: #E0E0E0; /* Light Gray */
   font-size: 16px;
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease, outline 0.3s ease;
@@ -173,28 +174,28 @@ body {
 }
 
 .nav-btn:hover {
-  color: #FFD700; /* Bright Yellow */
+  color: #FF0000; /* Red */
 }
 
 .nav-btn:focus, .nav-btn.selected {
-  background-color: #34495E; /* Lighter Dark Slate Blue */
-  outline: 2px solid #FFD700; /* Bright Yellow */
+  background-color: #444; /* Darker Gray */
+  outline: 2px solid #FF0000; /* Red */
 }
 
 /* Footer styles */
 .footer {
-  background-color: #BDC3C7; /* Light Slate Gray */
+  background-color: #444; /* Darker Gray */
   padding: 10px;
   text-align: center;
   position: fixed;
   bottom: 0;
   width: 100%;
-  color: #2C3E50; /* Charcoal */
+  color: #E0E0E0; /* Light Gray */
 }
 
 /* Login button styles */
 .login-btn {
-  background-color: #A35400; /* Really Dark Orange */
+  background-color: #FF0000; /* Red */
   color: #FFFFFF; /* White */
   border: none;
   padding: 10px 20px;
@@ -204,7 +205,7 @@ body {
 }
 
 .login-btn:hover {
-  background-color: #8B4500; /* Darker shade of Really Dark Orange */
+  background-color: #B20000; /* Darker Red */
 }
 
 /* Form styles */
@@ -213,7 +214,7 @@ body {
 }
 
 .form-control {
-  border: 1px solid #BDC3C7; /* Light Slate Gray */
+  border: 1px solid #7F7F7F; /* Gray */
   border-radius: 5px;
   padding: 10px;
   font-size: 1rem;
@@ -221,25 +222,26 @@ body {
 }
 
 .form-control:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+  border-color: #FF0000; /* Red */
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
 
 .label {
   font-weight: bold;
   margin-bottom: 5px;
+  color: #E0E0E0; /* Light Gray */
 }
 
 .text-danger {
-  color: #dc3545;
+  color: #FF0000; /* Red */
 }
 
 /* Additional styles for specific elements */
 .card-header {
-  background-color: #2C3E50; /* Dark Slate Blue */
-  color: #FFFFFF; /* White */
+  background-color: #2E2E2E; /* Dark Gray */
+  color: #E0E0E0; /* Light Gray */
   padding: 10px 20px;
-  border-bottom: 1px solid #BDC3C7; /* Light Slate Gray */
+  border-bottom: 1px solid #7F7F7F; /* Gray */
 }
 
 .img-fluid {

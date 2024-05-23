@@ -17,6 +17,7 @@ public class Band
 
     public string? BandName { get; set; }
     public string? BandPicture { get; set; }
+    public string? Details { get; set; }
 
     public LocationEnum Location { get; set; }
     public GenreEnum Genre { get; set; }
