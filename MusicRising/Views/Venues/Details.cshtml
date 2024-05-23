@@ -12,7 +12,8 @@
     {
         {"Venue Name", Model.VenueName},
         {"Location", Model.Location.ToString()},
-        {"Genre", Model.Genre.ToString()}
+        {"Genre", Model.Genre.ToString()},
+        {"Address", Model.Address}
     },
     Id = Model.VenueId,
     IsOwner = Model.IsOwner,
@@ -37,6 +38,6 @@
             });
         }
 
-        initMap();
+        google.maps.event.addDomListener(window, 'load', initMap);
     </script>
 }
