@@ -9,4 +9,7 @@ public interface IBandsService
 
     Task Delete(Band band);
     Task Update(Band band);
+    
+    Task<Band> GetBandByIdAsync(string id);
+    
 }

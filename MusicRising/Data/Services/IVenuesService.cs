@@ -9,4 +9,6 @@ public interface IVenuesService
     Task Delete(Venue venue);
     Task Update(Venue venue);
     bool IsVenueHolder(string? userID);
+    Task<Venue> GetVenueByIdAsync(string id);
+ 
 }

@@ -58,5 +58,10 @@ namespace MusicRising.Data.Services
 
             return _context.Venues.Any(v => v.IdentityUserId == userID);
         }
+        
+        public async Task<Venue> GetVenueByIdAsync(string id)
+        {
+            return await _context.Venues.FirstOrDefaultAsync(v => v.VenueId == id);
+        }
     }
 }
