@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using MusicRising.Helpers
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 <!DOCTYPE html>
@@ -51,31 +52,35 @@ var showSelectionBar = !(path.Contains("/about") || path.Contains("/identity") |
 
 @if (showSelectionBar)
 {
-<nav class="selection-bar">
-    <div class="dropdown">
-        <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
-        <ul class="dropdown-menu" aria-labelledby="locationDropdown">
-            <li><a class="dropdown-item" href="#">Location 1</a></li>
-            <li><a class="dropdown-item" href="#">Location 2</a></li>
-        </ul>
-    </div>
-    <div class="divider"></div>
-    <div class="dropdown">
-        <button class="selection dropdown-toggle" type="button" id="genreDropdown" data-bs-toggle="dropdown" aria-expanded="false">Genre</button>
-        <ul class="dropdown-menu" aria-labelledby="genreDropdown">
-            <li><a class="dropdown-item" href="#">Genre 1</a></li>
-            <li><a class="dropdown-item" href="#">Genre 2</a></li>
-        </ul>
-    </div>
-    <div class="divider"></div>
-    <div class="dropdown">
-        <button class="selection dropdown-toggle" type="button" id="likedDropdown" data-bs-toggle="dropdown" aria-expanded="false">Liked</button>
-        <ul class="dropdown-menu" aria-labelledby="likedDropdown">
-            <li><a class="dropdown-item" href="#">Liked 1</a></li>
-            <li><a class="dropdown-item" href="#">Liked 2</a></li>
-        </ul>
-    </div>
-</nav>
+    <nav class="selection-bar">
+        <div class="dropdown">
+            <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
+            <ul class="dropdown-menu" aria-labelledby="locationDropdown">
+                @foreach (var location in Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>())
+                {
+                    <li><a class="dropdown-item" href="?location=@location">@location</a></li>
+                }
+            </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="dropdown">
+            <button class="selection dropdown-toggle" type="button" id="genreDropdown" data-bs-toggle="dropdown" aria-expanded="false">Genre</button>
+            <ul class="dropdown-menu" aria-labelledby="genreDropdown">
+                @foreach (var genre in Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>())
+                {
+                    <li><a class="dropdown-item" href="?genre=@genre">@genre</a></li>
+                }
+            </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="dropdown">
+            <button class="selection dropdown-toggle" type="button" id="likedDropdown" data-bs-toggle="dropdown" aria-expanded="false">Liked</button>
+            <ul class="dropdown-menu" aria-labelledby="likedDropdown">
+                <li><a class="dropdown-item" href="?liked=true">Liked</a></li>
+                <li><a class="dropdown-item" href="?liked=false">Not Liked</a></li>
+            </ul>
+        </div>
+    </nav>
 }
 
 <nav class="bottom-nav">

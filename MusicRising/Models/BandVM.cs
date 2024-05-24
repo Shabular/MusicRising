@@ -20,7 +20,9 @@ public class BandVM
     public GenreEnum Genre { get; set; }
     public List<Show>? Shows { get; set; }
     public List<PromoItem>? PromoItems { get; set; }
+    
     public List<Rating>? Ratings { get; set; }
     public bool IsOwner { get; set; }
+    public bool CanBeBooked { get; set; } 
 }
 

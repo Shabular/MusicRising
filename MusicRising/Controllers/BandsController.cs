@@ -29,16 +29,39 @@ namespace MusicRising.Controllers
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
-
+        
         // GET: Bands
-        public async Task<IActionResult> Index()
+        // when a selection button is clicked filter for that selection and reload view
+        //bool liked will be used to show liked bands or v enues only but that it not jet inplemented
+        public async Task<IActionResult> Index(string location, string genre, bool liked = false)
         {
             var bands = await _bandsService.GetAll().ToListAsync();
-            Debug.WriteLine($"Found {bands.Count} bands in the Index method.");
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                bands = bands.Where(b => b.Location.ToString() == location).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                bands = bands.Where(b => b.Genre.ToString() == genre).ToList();
+            }
+
+            // 
+            /*if (liked)
+            {
+                // if user has band in his liked list.....//
+            }*/
+
+            ViewData["Location"] = new SelectList(Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>());
+            ViewData["Genre"] = new SelectList(Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>());
+            ViewData["Liked"] = true;
+
             return View(bands);
         }
 
         // GET: Bands/Landing
+        // this is used to show all bands a user has or go and create one
         public async Task<IActionResult> Landing()
         {
             var userId = _userManager.GetUserId(User);
@@ -50,8 +73,11 @@ namespace MusicRising.Controllers
         }
 
         // GET: Bands/Details/5
+        // if the user is the bandmember that registered this band he can edit or delete
+        
         public async Task<IActionResult> Details(string id)
         {
+            // tu use this the band should exist
             if (id == null)
             {
                 return NotFound();
@@ -65,6 +91,7 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
+            // create viewmodel to get beter / other data then in model
             var bandVM = new BandVM
             {
                 BandId = band.BandId,
@@ -81,7 +108,8 @@ namespace MusicRising.Controllers
                 Address = band.Address,
                 Latitude = band.Latitude,
                 Longitude = band.Longitude,
-                IsOwner = band.IdentityUserId == _userManager.GetUserId(User)
+                IsOwner = band.IdentityUserId == _userManager.GetUserId(User),
+                CanBeBooked = _venuesService.IsVenueHolder(_userManager.GetUserId(User))
             };
 
             return View(bandVM);
@@ -95,10 +123,12 @@ namespace MusicRising.Controllers
         }
 
         // POST: Bands/Create
+        // we use a bandvm to present and get data
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BandVM band)
         {
+            // if you create a band you should upload image
             if (band.Image != null)
             {
                 string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, band.Image);
@@ -155,7 +185,7 @@ namespace MusicRising.Controllers
             };
 
             ViewBag.Title = "Band";
-            return View(bandVM);
+            return View(id, bandVM);
         }
 
         [HttpPost]
@@ -163,11 +193,13 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> Edit(string id, BandVM bandVM)
         {
             _debugHelper.DebugWriteLine($"Received edit request for band ID: {id}");
+            // we do this to make shure someone did not get on this page by filling random url
             if (id != bandVM.BandId)
             {
                 return NotFound();
             }
 
+            // debugging message to know if there is something wrong when uploading and image is not shown
             _debugHelper.DebugWriteLine("the picture url = " + bandVM.ImageFileName);
 
             if (ModelState.IsValid)

@@ -48,5 +48,15 @@ namespace MusicRising.Data.Services
             _context.Venues.Update(venue);
             await _context.SaveChangesAsync();
         }
+
+        public bool IsVenueHolder(string? userID)
+        {
+            if (string.IsNullOrEmpty(userID))
+            {
+                return false;
+            }
+
+            return _context.Venues.Any(v => v.IdentityUserId == userID);
+        }
     }
 }

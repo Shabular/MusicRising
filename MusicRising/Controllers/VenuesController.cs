@@ -13,6 +13,7 @@ using MusicRising.Models;
 
 namespace MusicRising.Controllers
 {
+    // comments one how this works are in bandcontroller
     public class VenuesController : Controller
     {
         private readonly IVenuesService _venuesService;
@@ -27,10 +28,30 @@ namespace MusicRising.Controllers
         }
 
         // GET: Venues
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string location, string genre, bool liked = false)
         {
             var venues = await _venuesService.GetAll().ToListAsync();
-            Debug.WriteLine($"Found {venues.Count} venues in the Index method.");
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                venues = venues.Where(v => v.Location.ToString() == location).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                venues = venues.Where(v => v.Genre.ToString() == genre).ToList();
+            }
+
+            // not implemented jet provisions for
+            /*if (liked)
+            {
+                venues = venues.Where(v => v.Liked).ToList(); // Assuming Liked is a boolean property in the Venue model
+            }*/
+
+            ViewData["Location"] = new SelectList(Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>());
+            ViewData["Genre"] = new SelectList(Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>());
+            ViewData["Liked"] = true;
+
             return View(venues);
         }
 

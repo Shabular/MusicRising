@@ -13,6 +13,9 @@ using MusicRising.Models;
 
 namespace MusicRising.Controllers
 {
+    
+    // due to the fact this works ( almost) like the bandcontroller go there for comments
+    
     public class ShowsController : Controller
     {
         private readonly IShowsService _showsService;
@@ -32,9 +35,30 @@ namespace MusicRising.Controllers
         }
 
         // GET: Shows
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string location, string genre, bool liked = false)
         {
             var shows = await _showsService.GetAll().ToListAsync();
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                shows = shows.Where(s => s.Venue.Location.ToString() == location).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                shows = shows.Where(s => s.Genre.ToString() == genre).ToList();
+            }
+
+            // not implemented jet
+            /*if (liked)
+            {
+                shows = shows.Where(s => s.Liked).ToList(); // see bandcontroller for specialized comments
+            }*/
+
+            ViewData["Location"] = new SelectList(Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>());
+            ViewData["Genre"] = new SelectList(Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>());
+            ViewData["Liked"] = true;
+
             return View(shows);
         }
         
@@ -77,7 +101,9 @@ namespace MusicRising.Controllers
             {
                 ShowId = show.ShowId,
                 VenueId = show.VenueId,
+                Venue = show.Venue,
                 BandId = show.BandId,
+                HeadLiner = show.HeadLiner,
                 Genre = show.Genre,
                 Date = show.Date,
                 PromoLink = show.PromoLink,
@@ -133,7 +159,7 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> Create(Band band)
         {
             string bandID = band.BandId;
-            _debugHelper.DebugWriteLine("In book show");
+            _debugHelper.DebugWriteLine("In create band");
             _debugHelper.DebugWriteLine("bandID = " + bandID);
             
             // we are here bandID is not null anymore!!
@@ -154,6 +180,8 @@ namespace MusicRising.Controllers
                 _debugHelper.DebugWriteLine("band or venue was null" );
                 return NotFound();
             }
+            
+            
 
             _debugHelper.DebugWriteLine("create show vm");
             _debugHelper.DebugWriteLine("VenueList" + venueList);
@@ -188,7 +216,7 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BookingVM bookingVm )
         {
-            _debugHelper.DebugWriteLine("In create show");
+            _debugHelper.DebugWriteLine("In create show with bookingvm");
             _debugHelper.DebugWriteLine("bandID = " + bookingVm.showVM.BandId);
 
             string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, bookingVm.showVM.PromoItem);
@@ -246,7 +274,7 @@ namespace MusicRising.Controllers
                 IsVenueOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
-            return View(showVM);
+            return View(id, showVM);
         }
 
         // POST: Shows/Edit/5
