@@ -21,11 +21,15 @@ public class Venue
 
     // Proper navigation properties for EF relationships
     public List<Show>? Shows { get; set;}
+    public string? Details { get; set; }
     public List<PromoItem>? PromoItems { get; set;}
     
     public string? VenuePicture { get; set; }
 
-    public string BankAccount { get; set;}  // Made public getter for external access if needed
     public GenreEnum Genre { get; set;}
     public List<Rating>? Ratings { get; set;}
+    
+    public string Address { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
 }

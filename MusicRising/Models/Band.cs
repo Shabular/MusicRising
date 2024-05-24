@@ -17,13 +17,16 @@ public class Band
 
     public string? BandName { get; set; }
     public string? BandPicture { get; set; }
+    public string? Details { get; set; }
 
     public LocationEnum Location { get; set; }
     public GenreEnum Genre { get; set; }
 
-    public List<Show>? Shows { get; set; }  // Ensure Show has a BandId foreign key
-    public List<PromoItem>? PromoItems { get; set; }  // Ensure PromoItem has a BandId foreign key
-
-    public string? BankAccount { get; set; }  // Made public and renamed
+    public List<Show>? Shows { get; set; }
+    public List<PromoItem>? PromoItems { get; set; }
     public List<Rating>? Ratings { get; set; }
+        
+    public string Address { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
 }

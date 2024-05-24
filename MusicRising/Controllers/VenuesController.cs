@@ -13,6 +13,7 @@ using MusicRising.Models;
 
 namespace MusicRising.Controllers
 {
+    // comments one how this works are in bandcontroller
     public class VenuesController : Controller
     {
         private readonly IVenuesService _venuesService;
@@ -27,10 +28,30 @@ namespace MusicRising.Controllers
         }
 
         // GET: Venues
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string location, string genre, bool liked = false)
         {
             var venues = await _venuesService.GetAll().ToListAsync();
-            Debug.WriteLine($"Found {venues.Count} venues in the Index method.");
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                venues = venues.Where(v => v.Location.ToString() == location).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(genre))
+            {
+                venues = venues.Where(v => v.Genre.ToString() == genre).ToList();
+            }
+
+            // not implemented jet provisions for
+            /*if (liked)
+            {
+                venues = venues.Where(v => v.Liked).ToList(); // Assuming Liked is a boolean property in the Venue model
+            }*/
+
+            ViewData["Location"] = new SelectList(Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>());
+            ViewData["Genre"] = new SelectList(Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>());
+            ViewData["Liked"] = true;
+
             return View(venues);
         }
 
@@ -74,7 +95,6 @@ namespace MusicRising.Controllers
                 Shows = venue.Shows,
                 PromoItems = venue.PromoItems,
                 Ratings = venue.Ratings,
-                BankAccount = venue.BankAccount,
                 IsOwner = venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
@@ -97,6 +117,8 @@ namespace MusicRising.Controllers
             {
                 string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venue.Image);
 
+                var VenueCoordinates = await GeocodingHelper.GetCoordinatesAsync(venue.Address);
+                
                 var venueObj = new Venue
                 {
                     VenueId = Guid.NewGuid().ToString(),
@@ -106,7 +128,9 @@ namespace MusicRising.Controllers
                     VenuePicture = filePath,
                     Location = venue.Location,
                     Genre = venue.Genre,
-                    BankAccount = venue.BankAccount
+                    Latitude = VenueCoordinates.Latitude,
+                    Longitude = VenueCoordinates.Longitude,
+                    Address = VenueCoordinates.Address
                 };
 
                 await _venuesService.Add(venueObj);
@@ -137,8 +161,8 @@ namespace MusicRising.Controllers
                 Name = venue.VenueName,
                 PictureUrl = venue.VenuePicture,
                 Location = venue.Location,
+                Address = venue.Address,
                 Genre = venue.Genre,
-                BankAccount = venue.BankAccount,
                 IsOwner = venue.IdentityUserId == _userManager.GetUserId(User)
             };
 
@@ -171,11 +195,17 @@ namespace MusicRising.Controllers
                         string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venueVM.Picture);
                         venue.VenuePicture = filePath;
                     }
+                    
+                    var VenueCoordinates = await GeocodingHelper.GetCoordinatesAsync(venue.Address);
+                    
 
                     venue.VenueName = venueVM.Name;
                     venue.Location = venueVM.Location;
                     venue.Genre = venueVM.Genre;
-                    venue.BankAccount = venueVM.BankAccount;
+                   
+                    venue.Latitude = VenueCoordinates.Latitude;
+                    venue.Longitude = VenueCoordinates.Longitude;
+                    venue.Address = VenueCoordinates.Address;
 
                     await _venuesService.Update(venue);
                 }

@@ -8,4 +8,5 @@ public interface IVenuesService
     Task Add(Venue venue);
     Task Delete(Venue venue);
     Task Update(Venue venue);
+    bool IsVenueHolder(string? userID);
 }

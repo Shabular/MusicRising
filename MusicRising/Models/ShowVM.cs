@@ -12,10 +12,13 @@ public class ShowVM
     public Band HeadLiner { get; set; }
     public GenreEnum Genre { get; set; }
     public DateTime Date { get; set; }
-    public string PromoItem { get; set; }
+    public IFormFile? PromoItem { get; set; }
     public string? PromoLink { get; set; }
+    public string? Details { get; set; }
     public double? ShowFee { get; set; }
-    public double BandFee { get; set; }
-    public bool Payed { get; set; }
-    public bool IsOwner { get; set; } // Add this property
+    public double BandFee { get; set; } = 50.00;
+    public bool Booked { get; set; }
+    public bool IsVenueOwner { get; set; } // Add this property
+    public bool IsBandMember { get; set; } // Add this property
+    
 }
