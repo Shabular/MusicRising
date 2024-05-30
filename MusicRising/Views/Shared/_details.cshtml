@@ -1,31 +1,60 @@
-﻿@model dynamic
+﻿@using Microsoft.AspNetCore.Identity
+@model dynamic
 
 <div class="container mt-4">
-    <div class="card">
-        <div class="card-header d-flex align-items-center p-0" style="height: auto;">
-            <h3 class="ms-3 mb-0">@Model.Title</h3>
+    <div class="card d-flex flex-row">
+        <div class="col-md-4 p-0">
             @if (Model.ImageFileName != null)
             {
-                <img src="~/Images/@Model.ImageFileName" alt="@Model.Title" class="img-fluid" style="border-radius: 10px; max-height: 180px; object-fit: cover;">
+            <img src="~/Images/@Model.ImageFileName" alt="@Model.Title" class="img-fluid" style="height: 100%; width: 100%; object-fit: cover;">
             }
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <dl class="row">
-                        @foreach (var detail in Model.Details)
-                        {
-                            <dt class="col-sm-4">@detail.Key</dt>
-                            <dd class="col-sm-8">@detail.Value</dd>
-                        }
-                    </dl>
-                    @if (Model.IsOwner)
+        <div class="col-md-4">
+            <div class="card-body">
+                <h3 class="card-title">@Model.Title</h3>
+                <dl class="row">
+                    @foreach (var detail in Model.Details)
                     {
-                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                    <dt class="col-sm-4">@detail.Key</dt>
+                    <dd class="col-sm-8">@detail.Value</dd>
                     }
-                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-                </div>
+                </dl>
+                @if (Model.IsOwner)
+                {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                }
+                @if (Model.BookableLink)
+                {
+                <a asp-action="BookShow" asp-route-bandID="@Model.Id" class="btn btn-primary">Book us</a>
+                }
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
+        @if (Model.Latitude != null && Model.Longitude != null)
+        {
+        <div class="col-md-4 p-0">
+            <div id="map" style="height: 100%; width: 100%;"></div>
+        </div>
+        }
     </div>
 </div>
+
+@section Scripts {
+<script>
+    function initMap() {
+        var latitude = @Model.Latitude;
+        var longitude = @Model.Longitude;
+        var location = { lat: latitude, lng: longitude };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+    }
+
+    initMap();
+</script>
+}

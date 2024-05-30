@@ -2,10 +2,9 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<IdentityUser> UserManager
 
-
 @{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+ViewData["Title"] = "Create";
+Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Create a band</h2>
@@ -24,6 +23,11 @@
                 <span asp-validation-for="BandName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" class="form-control" accept="image/*" style="width: 30%"/>
                 <span asp-validation-for="Image" class="text-danger"></span>
@@ -39,11 +43,6 @@
                 <span asp-validation-for="Genre" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BankAccount" class="control-label"></label>
-                <input asp-for="BankAccount" class="form-control" />
-                <span asp-validation-for="BankAccount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -53,4 +52,3 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-

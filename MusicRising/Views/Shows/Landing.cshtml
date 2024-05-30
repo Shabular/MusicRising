@@ -1,0 +1,55 @@
+﻿@model List<MusicRising.Models.ShowVM>
+
+@{
+    ViewData["Title"] = "My Shows";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>My Shows</h2>
+
+@if (Model.Any())
+{
+    <p>Select a show to manage:</p>
+    <div class="container">
+        <div class="row">
+            @foreach (var show in Model) {
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <div class="card mb-4" style="display: flex; flex-direction: row; width: 100%; height: 180px;">
+                        <div style="flex: 1;">
+                            <img class="card-img-left" src="~/Images/@show.PromoLink" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                        </div>
+                        <div class="card-body" style="flex: 2; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h5 class="card-title">@show.HeadLiner?.BandName</h5>
+                                <p class="card-text">@show.Genre | @show.Venue?.VenueName</p>
+                                <p class="card-text"><small class="text-muted">Date: @show.Date.ToString("yyyy-MM-dd")</small></p>
+                            </div>
+                            <div>
+                                @if (!show.Booked)
+                                {
+                                    @if (show.IsVenueOwner)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@show.ShowId" class="btn btn-primary">Edit</a>
+                                        <a asp-action="Delete" asp-route-id="@show.ShowId" class="btn btn-danger">Delete</a>
+                                    }
+
+                                    @if (show.IsVenueOwner || show.IsBandMember)
+                                    {
+                                        <a asp-action="Bid" asp-route-id="@show.ShowId" class="btn btn-secondary">Bid</a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>You don't have any shows yet.
+        Go to bands and find a band!</p>
+}
+
+
