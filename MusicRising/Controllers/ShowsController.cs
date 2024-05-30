@@ -303,7 +303,7 @@ namespace MusicRising.Controllers
                     
                     if (showVM.PromoItem != null)
                     {
-                        filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, showVM.PromoItem);
+                        filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, showVM.PromoItem, showVM.PromoLink);
                     }
                     
                     show.VenueId = showVM.VenueId;

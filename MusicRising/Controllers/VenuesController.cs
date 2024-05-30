@@ -192,7 +192,7 @@ namespace MusicRising.Controllers
 
                     if (venueVM.Picture != null)
                     {
-                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, venueVM.Picture);
+                        string filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, venueVM.Picture, venueVM.PictureUrl);
                         venue.VenuePicture = filePath;
                     }
                     

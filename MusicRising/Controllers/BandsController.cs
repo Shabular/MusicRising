@@ -131,7 +131,7 @@ namespace MusicRising.Controllers
             // if you create a band you should upload image
             if (band.Image != null)
             {
-                string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, band.Image);
+                string filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, band.Image, band.ImageFileName);
                 var bandCoordinates = await GeocodingHelper.GetCoordinatesAsync(band.Address);
 
                 var bandObj = new Band
