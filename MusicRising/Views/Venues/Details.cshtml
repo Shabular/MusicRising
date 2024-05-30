@@ -1,0 +1,20 @@
+@model MusicRising.Models.VenueVM
+
+@{
+    ViewData["Title"] = "Venue Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Details", new {
+    Title = Model.VenueName ?? "Venue Details",
+    ImageFileName = Model.ImageFileName,
+    Details = new Dictionary<string, string>
+    {
+        {"Venue Name", Model.VenueName},
+        {"Location", Model.Location.ToString()},
+        {"Genre", Model.Genre.ToString()},
+        {"Bank Account", Model.BankAccount}
+    },
+    Id = Model.VenueId,
+    IsOwner = Model.IsOwner
+})

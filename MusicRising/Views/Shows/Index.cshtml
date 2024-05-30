@@ -1,0 +1,31 @@
+@using System.Globalization
+@using MusicRising.Data.Services
+@model List<MusicRising.Models.Show>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Comming Shows</h1>
+
+<div class="container">
+    <div class="row">
+        @foreach (var show in Model) {
+        <div class="col-md-4 d-flex align-items-stretch">
+            ImageUrl = show.PromoLink  != null ? Url.Content($"{show.PromoLink}") : Url.Content("~/Images/default.png"),
+            Title = show.HeadLiner.BandName,
+            Description = $"{show.Genre} | {show.Venue.Location}",
+            Id = show.ShowFee
+            })
+        </div>
+        }
+    </div>
+</div>
+
+
+
+@if (!Model.Any())
+{
+    <p>No shows are scheduled jet</p>
+}
+

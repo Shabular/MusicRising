@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - Music Rising</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Music Rising</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Bands" asp-action="Landing">My Bands</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Venues" asp-action="Landing">My Venues</a>
+                        </li>
+                    }
+                </ul>
+                <partial name="_LoginPartial"/>
+            </div>
+        </div>
+    </nav>
+</header>
+
+@{
+// here we get the current page and if it is a page not having to do with finding bands/venues/etc we remove the bar from layout
+var path = HttpContextAccessor.HttpContext.Request.Path.ToString().ToLower();
+var showSelectionBar = !(path.Contains("/about") || path.Contains("/identity") || path.Contains("/home"));
+}
+
+@if (showSelectionBar)
+{
+<nav class="selection-bar">
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
+        <ul class="dropdown-menu" aria-labelledby="locationDropdown">
+            <li><a class="dropdown-item" href="#">Location 1</a></li>
+            <li><a class="dropdown-item" href="#">Location 2</a></li>
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="genreDropdown" data-bs-toggle="dropdown" aria-expanded="false">Genre</button>
+        <ul class="dropdown-menu" aria-labelledby="genreDropdown">
+            <li><a class="dropdown-item" href="#">Genre 1</a></li>
+            <li><a class="dropdown-item" href="#">Genre 2</a></li>
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="likedDropdown" data-bs-toggle="dropdown" aria-expanded="false">Liked</button>
+        <ul class="dropdown-menu" aria-labelledby="likedDropdown">
+            <li><a class="dropdown-item" href="#">Liked 1</a></li>
+            <li><a class="dropdown-item" href="#">Liked 2</a></li>
+        </ul>
+    </div>
+</nav>
+}
+
+<nav class="bottom-nav">
+    <a class="nav-btn" asp-area="" asp-controller="Shows" asp-action="Index">Shows</a>
+    <div class="divider"></div>
+    <a class="nav-btn" asp-area="" asp-controller="Bands" asp-action="Index">Bands</a>
+    <div class="divider"></div>
+    <a class="nav-btn" asp-area="" asp-controller="Venues" asp-action="Index">Venues</a>
+</nav>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+<footer class="footer text-muted">
+    <div class="container">
+        &copy; 2024 - Music Rising - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

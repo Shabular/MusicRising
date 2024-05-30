@@ -1,0 +1,17 @@
+﻿version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: Database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: DevelopmentPassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - D:\MusicRising\data\db:/var/lib/mysql
+
+volumes:
+  mariadb_data:
+    driver: local

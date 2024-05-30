@@ -1,0 +1,18 @@
+@model MusicRising.Models.VenueVM
+
+@{
+    ViewData["Title"] = "Edit Venue";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_EntityEdit", new MusicRising.Models.EntityEditVM
+{
+    Id = Model.VenueId,
+    IdentityUserId = Model.IdentityUserId,
+    Name = Model.VenueName,
+    PictureUrl = Model.ImageFileName,
+    Location = Model.Location,
+    Genre = Model.Genre,
+    BankAccount = Model.BankAccount,
+    IsOwner = Model.IsOwner
+})

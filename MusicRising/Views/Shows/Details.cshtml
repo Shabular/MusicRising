@@ -1,0 +1,21 @@
+@model MusicRising.Models.ShowVM
+
+@{
+    ViewData["Title"] = "Show Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("_Details", new {
+    Title = Model.HeadLiner?.BandName ?? "Show Details",
+    ImageFileName = Model.PromoItem,
+    Details = new Dictionary<string, string>
+    {
+        {"Venue", Model.Venue.VenueName},
+        {"Date", Model.Date.ToShortDateString()},
+        {"Genre", Model.Genre.ToString()},
+        {"Show Fee", Model.ShowFee.ToString()},
+        {"Promo Link", Model.PromoItem}
+    },
+    Id = Model.ShowId,
+    IsOwner = Model.IsOwner
+})
