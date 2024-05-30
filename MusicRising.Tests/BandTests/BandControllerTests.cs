@@ -32,7 +32,7 @@ namespace MusicRising.Tests.BandTests
         }
 
         [Fact]
-        public async Task Index_ReturnsViewResult_WithListOfBands()
+        public async Task IndexReturnsViewWithListOfBands()
         {
             // Arrange
             var bands = new List<Band>
