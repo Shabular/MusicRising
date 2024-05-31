@@ -37,7 +37,19 @@ jobs:
         with:
           dotnet-version: 5.0
 
-      - name: Wait for MariaDB to be ready
+      - name: Check if MariaDB is running
+        id: check_mariadb
+        run: |
+          if docker ps -q -f name=mariadb; then
+            echo "MariaDB is running"
+            echo "mariadb_running=true" >> $GITHUB_ENV
+          else
+            echo "MariaDB is not running"
+            echo "mariadb_running=false" >> $GITHUB_ENV
+          fi
+
+      - name: Wait for MariaDB to be ready (if running)
+        if: env.mariadb_running == 'true'
         run: |
           echo "Waiting for MariaDB to be ready..."
           for i in {1..30}; do
@@ -56,8 +68,6 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run tests
-        env:
-          ConnectionStrings__MariaDB: "Server=localhost;Port=3306;Database=testdb;User=testuser;Password=testpassword;"
         run: dotnet test --no-build --collect:"XPlat Code Coverage"
 
       - name: Publish test results
