@@ -6,26 +6,29 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Comming Shows</h1>
+
+@{
+ViewData["Title"] = "Shows Index";
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <div class="container">
     <div class="row">
         @foreach (var show in Model) {
         <div class="col-md-4 d-flex align-items-stretch">
-            ImageUrl = show.PromoLink  != null ? Url.Content($"{show.PromoLink}") : Url.Content("~/Images/default.png"),
-            Title = show.HeadLiner.BandName,
-            Description = $"{show.Genre} | {show.Venue.Location}",
-            Id = show.ShowFee
+            @Html.Partial("_Card", new {
+            ImageUrl = show.HeadLiner != null && show.HeadLiner.BandPicture != null ? Url.Content($"{show.HeadLiner.BandPicture}") : Url.Content("~/Images/default.png"),
+            Title = show.HeadLiner != null ? show.HeadLiner.BandName : "No Headliner",
+            Description = $"{show.Genre} | {show.Venue?.VenueName} | {show.Venue?.Location}",
+            Date = show.Date.ToString("yyyy-MM-dd"),
+            Id = show.ShowId
             })
         </div>
         }
     </div>
 </div>
 
-
-
 @if (!Model.Any())
 {
-    <p>No shows are scheduled jet</p>
+<p>No shows are scheduled yet</p>
 }
-

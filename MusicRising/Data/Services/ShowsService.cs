@@ -35,5 +35,10 @@ namespace MusicRising.Data.Services
             _context.Shows.Update(show);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task<Show> GetShowByIdAsync(string id)
+        {
+            return await _context.Shows.FirstOrDefaultAsync(s => s.ShowId == id);
+        }
     }
 }

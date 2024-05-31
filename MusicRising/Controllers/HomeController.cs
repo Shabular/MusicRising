@@ -10,6 +10,9 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly UserManager<IdentityUser> _userManager;
 
+    // homecontroller will be used to show people what we are all about
+    // this will be created at the end because first we need to show what we can do
+    // this still is a school project
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;

@@ -30,6 +30,10 @@ namespace MusicRising.Data.Services
                 return Enumerable.Empty<Band>().AsQueryable();
             }
         }
+        public async Task<Band> GetBandByIdAsync(string id)
+        {
+            return await _context.Bands.Include(b => b.User).FirstOrDefaultAsync(b => b.BandId == id);
+        }
 
         public async Task Add(Band band)
         {
@@ -48,5 +52,7 @@ namespace MusicRising.Data.Services
             _context.Bands.Update(band);
             await _context.SaveChangesAsync();
         }
+
+
     }
 }

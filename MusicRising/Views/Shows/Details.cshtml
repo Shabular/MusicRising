@@ -7,15 +7,37 @@
 
 @Html.Partial("_Details", new {
     Title = Model.HeadLiner?.BandName ?? "Show Details",
-    ImageFileName = Model.PromoItem,
+    ImageFileName = Model.PromoLink,
     Details = new Dictionary<string, string>
     {
         {"Venue", Model.Venue.VenueName},
         {"Date", Model.Date.ToShortDateString()},
         {"Genre", Model.Genre.ToString()},
-        {"Show Fee", Model.ShowFee.ToString()},
-        {"Promo Link", Model.PromoItem}
+        {"Show Fee", Model.ShowFee.ToString()}
     },
     Id = Model.ShowId,
-    IsOwner = Model.IsOwner
+    IsOwner = Model.IsVenueOwner,
+    BookableLink = false,
+    Latitude = Model.Venue.Latitude,
+    Longitude = Model.Venue.Longitude
 })
+
+@section Scripts {
+    <script>
+        function initMap() {
+            var latitude = @Model.Venue.Latitude;
+            var longitude = @Model.Venue.Longitude;
+            var location = { lat: latitude, lng: longitude };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: location
+            });
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+        }
+
+        initMap();
+    </script>
+}

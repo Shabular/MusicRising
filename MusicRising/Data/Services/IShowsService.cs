@@ -11,4 +11,5 @@ public interface IShowsService
 
     Task Delete(Show show);
     Task Update(Show show);
+    Task<Show> GetShowByIdAsync(string id);
 }
