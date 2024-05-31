@@ -37,6 +37,18 @@ jobs:
         with:
           dotnet-version: 5.0
 
+      - name: Wait for MariaDB to be ready
+        run: |
+          echo "Waiting for MariaDB to be ready..."
+          for i in {1..30}; do
+            if docker exec $(docker ps -q -f name=mariadb) mysqladmin ping --silent; then
+              echo "MariaDB is ready"
+              break
+            fi
+            echo "Waiting..."
+            sleep 5
+          done
+
       - name: Restore dependencies
         run: dotnet restore
 
@@ -44,6 +56,8 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run tests
+        env:
+          ConnectionStrings__MariaDB: "Server=localhost;Port=3306;Database=testdb;User=testuser;Password=testpassword;"
         run: dotnet test --no-build --collect:"XPlat Code Coverage"
 
       - name: Publish test results
@@ -80,3 +94,4 @@ jobs:
         run: |
           # Add your deployment script here
           echo "Deploying application..."
+
