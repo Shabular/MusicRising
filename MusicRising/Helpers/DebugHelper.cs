@@ -1,4 +1,4 @@
-﻿namespace MusicRising.Helpers;
+namespace MusicRising.Helpers;
 
 public class DebugHelper
 {

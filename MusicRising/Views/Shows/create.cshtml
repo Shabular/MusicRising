@@ -45,6 +45,12 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                 <span asp-validation-for="showVM.Date" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="showVM.Details" class="control-label">Information about the show</label>
+                <input asp-for="showVM.Details" class="form-control" />
+                <span asp-validation-for="showVM.Details" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
                 <label asp-for="showVM.ShowFee" class="control-label"></label>
                 <input asp-for="showVM.ShowFee" class="form-control" />
                 <span asp-validation-for="showVM.ShowFee" class="text-danger"></span>

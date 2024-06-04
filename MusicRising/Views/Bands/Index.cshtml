@@ -11,9 +11,10 @@
         @foreach (var band in Model) {
             <div class="col-md-4 d-flex align-items-stretch">
                 @Html.Partial("_Card", new {
-                    ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("~/Images/default.png"),
+                    ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("default.png"),
                     Title = band.BandName,
                     Description = $"{band.Genre} | {band.Location}",
+                    Address = $"{band.Address}",
                     Id = band.BandId
                 })
             </div>

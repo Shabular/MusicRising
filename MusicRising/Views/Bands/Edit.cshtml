@@ -1,4 +1,4 @@
-@model MusicRising.Models.BandVM
+@model MusicRising.Models.EntityEditVM
 
 @{
     ViewData["Title"] = "Edit Band";
@@ -7,12 +7,13 @@
 
 @Html.Partial("_EntityEdit", new MusicRising.Models.EntityEditVM
 {
-    Id = Model.BandId,
+    Id = Model.Id,
     IdentityUserId = Model.IdentityUserId,
-    Name = Model.BandName,
-    PictureUrl = Model.ImageFileName,
+    Name = Model.Name,
+    PictureUrl = Model.PictureUrl,
     Location = Model.Location,
     Address = Model.Address,
     Genre = Model.Genre,
+    Details = Model.Details,
     IsOwner = Model.IsOwner
 })

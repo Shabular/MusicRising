@@ -1,4 +1,4 @@
-﻿namespace MusicRising.Helpers;
+namespace MusicRising.Helpers;
 using System;
 
 public enum GenreEnum
@@ -17,5 +17,6 @@ public enum GenreEnum
     Classical,
     Alternative,
     Indie,
-    Other
+    Other,
+    Unknown
 }

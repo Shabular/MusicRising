@@ -37,7 +37,8 @@ namespace MusicRising.Controllers
         // GET: Shows
         public async Task<IActionResult> Index(string location, string genre, bool liked = false)
         {
-            var shows = await _showsService.GetAll().ToListAsync();
+            var shows = await _showsService.GetAll().Where(s => s.Booked.ToString() == "true").ToListAsync();
+
 
             if (!string.IsNullOrEmpty(location))
             {
@@ -144,6 +145,7 @@ namespace MusicRising.Controllers
                 HeadLiner = show.HeadLiner,
                 Genre = show.Genre,
                 Date = show.Date,
+                Details = show.Details,
                 PromoLink = show.PromoLink,
                 ShowFee = show.ShowFee,
                 BandFee = show.BandFee,
@@ -191,6 +193,7 @@ namespace MusicRising.Controllers
                 VenueId = venue.VenueId,
                 BandId = band.BandId,
                 Genre = band.Genre,
+                Details = "",
                 Date = DateTime.Now,
                 PromoLink = null,
                 ShowFee = null,
@@ -233,9 +236,10 @@ namespace MusicRising.Controllers
                     Genre = bookingVm.showVM.Genre,
                     Date = bookingVm.showVM.Date,
                     PromoLink = filePath,
+                    Details = bookingVm.showVM.Details,
                     ShowFee = bookingVm.showVM.ShowFee,
                     BandFee = bookingVm.showVM.BandFee,
-                    Booked = bookingVm.showVM.Booked
+                    Booked = false
                 };
                 await _showsService.Add(showObj);
                 return RedirectToAction(nameof(Index));
@@ -252,86 +256,92 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
+            var show = await _showsService.GetAll()
+                .Include(s => s.HeadLiner)
+                .Include(s => s.Venue)
+                .FirstOrDefaultAsync(s => s.ShowId == id);
             if (show == null)
             {
                 return NotFound();
             }
 
-            var showVM = new ShowVM
+            var showVM = new EntityEditVM()
             {
-                ShowId = show.ShowId,
-                VenueId = show.VenueId,
-                Venue = show.Venue,
-                BandId = show.BandId,
-                HeadLiner = show.HeadLiner,
-                Genre = show.Genre,
+                Id = show.ShowId,
+                Venue = show.Venue ?? new Venue(), // Ensure Venue is not null
+                HeadLiner = show.HeadLiner ?? new Band(), // Ensure HeadLiner is not null
+                HeadLinerID = show.HeadLiner?.BandId,
+                HeadLinerName = show.HeadLiner?.BandName,
+                IdentityUserId = show.Venue.IdentityUserId,
+                PictureUrl = show.PromoLink,
+                Location = show.Venue.Location,
+                Address = show.Venue.Address,
+                Genre = show.HeadLiner?.Genre ?? GenreEnum.Unknown, // Assuming GenreEnum.Unknown as default
                 Date = show.Date,
-                PromoLink = show.PromoLink,
                 ShowFee = show.ShowFee,
+                Details = show.Details,
                 BandFee = show.BandFee,
                 Booked = show.Booked,
-                IsVenueOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User)
+                IsOwner = show.Venue.IdentityUserId == _userManager.GetUserId(User)
             };
-
-            return View(id, showVM);
+            _debugHelper.DebugWriteLine("headliner name show " + (show.HeadLiner?.BandName ?? "Unknown"));
+            _debugHelper.DebugWriteLine("headliner name showVM " + (showVM.HeadLiner?.BandName ?? "Unknown"));
+    
+            return View("_EntityEdit", showVM);
         }
 
+
+        
         // POST: Shows/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, ShowVM showVM)
+        public async Task<IActionResult> Edit(string view, EntityEditVM showVM)
         {
-            
-            
-            if (id != showVM.ShowId)
+            try
             {
-                return NotFound();
-            }
+                _debugHelper.DebugWriteLine("headliner name " + (showVM.HeadLiner?.BandName ?? "Unknown"));
+        
+                var show = await _showsService.GetAll()
+                    .Include(s => s.HeadLiner)
+                    .Include(s => s.Venue)
+                    .FirstOrDefaultAsync(s => s.ShowId == showVM.Id);
+                if (show == null)
+                {
+                    _debugHelper.DebugWriteLine("Show not found");
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
+                string filePath = showVM.PictureUrl;
+
+                if (showVM.Picture != null)
+                {
+                    _debugHelper.DebugWriteLine("Before update show image");
+                    filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, showVM.Picture, showVM.PictureUrl);
+                }
+
+                show.HeadLiner = showVM.HeadLiner ?? show.HeadLiner;
+                show.BandId = showVM.HeadLinerID ?? show.BandId; // Ensure BandId is not overwritten if null
+                show.Genre = showVM.Genre;
+                show.Date = showVM.Date ?? show.Date;
+                show.PromoLink = filePath;
+                show.ShowFee = showVM.ShowFee;
+                show.Details = showVM.Details;
+                show.BandFee = showVM.BandFee ?? show.BandFee;
+                show.Booked = showVM.Booked ?? show.Booked;
+
+                _debugHelper.DebugWriteLine("Before update show");
+                await _showsService.Update(show);
+            }
+            catch (DbUpdateConcurrencyException)
             {
-                try
-                {
-                    var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
-                    if (show == null)
-                    {
-                        return NotFound();
-                    }
-                    
-                    string filePath = "default.png";
-                    
-                    if (showVM.PromoItem != null)
-                    {
-                        filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, showVM.PromoItem, showVM.PromoLink);
-                    }
-                    
-                    show.VenueId = showVM.VenueId;
-                    show.BandId = showVM.BandId;
-                    show.Genre = showVM.Genre;
-                    show.Date = showVM.Date;
-                    show.PromoLink = filePath;
-                    show.ShowFee = showVM.ShowFee;
-                    show.BandFee = showVM.BandFee;
-                    show.Booked = showVM.Booked;
-
-                    await _showsService.Update(show);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ShowExists(showVM.ShowId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _debugHelper.DebugWriteLine("Database error");
+                throw;
             }
-            return View(showVM);
+            _debugHelper.DebugWriteLine("return to index from edit show");
+            return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: Shows/Delete/5
         public async Task<IActionResult> Delete(string id)

@@ -1,4 +1,4 @@
-﻿namespace MusicRising.Helpers;
+namespace MusicRising.Helpers;
 
 using System.Diagnostics;
 
@@ -28,7 +28,9 @@ public static class DockerHelper
 
             Console.WriteLine(result);
             Console.WriteLine("MariaDB docker up and running, please wait while the database is built");
-            Thread.Sleep(15000); // 15,000 milliseconds = 15 seconds
+            Thread.Sleep(15000); // 150,000 milliseconds = 150 seconds
+            
+            
         }  
     }
         

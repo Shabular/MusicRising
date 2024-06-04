@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using MusicRising.Data.Services;
 using MusicRising.Models;
 
@@ -19,6 +20,30 @@ public class DataSeeder
         _showsService = showsService;
     }
 
+    public static void RunEfDatabaseUpdate()
+    {
+        var processStartInfo = new ProcessStartInfo
+        {
+            FileName = "dotnet",
+            Arguments = "ef database update",
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using (var process = new Process { StartInfo = processStartInfo })
+        {
+            process.OutputDataReceived += (sender, args) => Console.WriteLine(args.Data);
+            process.ErrorDataReceived += (sender, args) => Console.WriteLine("ERROR: " + args.Data);
+
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+        }
+    }
+
     public async Task SeedData()
     {
         // Create users
@@ -35,6 +60,7 @@ public class DataSeeder
             BandName = "The Side Chicks",
             Location = LocationEnum.NoordBrabant,
             BandPicture = "sidechicks.jpg",
+            Details = "The side chicks is a punkrock cover band with a bit of own material",
             Genre = GenreEnum.Rock,
             Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
             Latitude = 37.4224764,
@@ -47,6 +73,7 @@ public class DataSeeder
             IdentityUserId = user2.Id,
             BandName = "Bad Religion",
             Location = LocationEnum.NoordBrabant,
+            Details = "One of the most amazing punk rock bands, songs like punk rock song and ephipany realy do the charm",
             BandPicture = "badreligion.jpg",
             Genre = GenreEnum.Pop,
             Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
@@ -60,6 +87,7 @@ public class DataSeeder
             IdentityUserId = user2.Id,
             BandName = "Imagine Dragons",
             BandPicture = "id.jpg",
+            Details = "Do i realy need to tell who we are?",
             Location = LocationEnum.Friesland,
             Genre = GenreEnum.Classical,
             Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
@@ -79,6 +107,7 @@ public class DataSeeder
             VenueName = "De klomp",
             Location = LocationEnum.Utrecht,
             VenuePicture = "klomp.jpg",
+            Details = "Small venue in Etten-Leur known for the wooden shoes on the ceiling",
             Genre = GenreEnum.Rock,
             Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
             Latitude = 37.4224764,
@@ -92,6 +121,7 @@ public class DataSeeder
             VenueName = "Krisjes",
             Location = LocationEnum.NoordBrabant,
             VenuePicture = "krisjes.jpg",
+            Details = "A small bar with loads of fun",
             Genre = GenreEnum.Pop,
             Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
             Latitude = 37.4224764,
@@ -105,6 +135,7 @@ public class DataSeeder
             VenueName = "Zalinaz",
             Location = LocationEnum.Zeeland,
             VenuePicture = "zalinaz.jpg",
+            Details = "We still have a party sometimes......",
             Genre = GenreEnum.Pop,
             Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
             Latitude = 37.4224764,
@@ -124,8 +155,10 @@ public class DataSeeder
             VenueId = venue1.VenueId,
             Date = DateTime.Now.AddMonths(1),
             Genre = GenreEnum.Rock,
+            Details = "Amazing fun to watch cover band and well we ll be playing punk rock",
             ShowFee = 100.00,
-            PromoLink = "rockfl2.jpg"
+            PromoLink = "rockfl2.jpg",
+            Booked = true
         };
 
         var show2 = new Show
@@ -135,9 +168,11 @@ public class DataSeeder
             VenueId = venue2.VenueId,
             HeadLiner = band2,
             Date = DateTime.Now.AddMonths(2),
+            Details = "Lets break stuff together",
             Genre = GenreEnum.Pop,
             ShowFee = 150.00,
-            PromoLink = "rockfl1.jpg"
+            PromoLink = "rockfl1.jpg",
+            Booked = true
         };
 
         await _showsService.Add(show1);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -105,6 +106,7 @@ namespace MusicRising.Controllers
                 Shows = band.Shows,
                 PromoItems = band.PromoItems,
                 Ratings = band.Ratings,
+                Details = band.Details,
                 Address = band.Address,
                 Latitude = band.Latitude,
                 Longitude = band.Longitude,
@@ -131,7 +133,9 @@ namespace MusicRising.Controllers
             // if you create a band you should upload image
             if (band.Image != null)
             {
-                string filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, band.Image, band.ImageFileName);
+                string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, band.Image);
+                _debugHelper.DebugWriteLine("filepath = " + filePath);
+                _debugHelper.DebugWriteLine("image name = " + band.Image.FileName);
                 var bandCoordinates = await GeocodingHelper.GetCoordinatesAsync(band.Address);
 
                 var bandObj = new Band
@@ -143,6 +147,7 @@ namespace MusicRising.Controllers
                     BandPicture = filePath,
                     Location = band.Location,
                     Genre = band.Genre,
+                    Details = band.Details,
                     Latitude = bandCoordinates.Latitude,
                     Longitude = bandCoordinates.Longitude,
                     Address = band.Address
@@ -159,6 +164,7 @@ namespace MusicRising.Controllers
         // GET: Bands/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
+            
             if (id == null)
             {
                 return NotFound();
@@ -170,39 +176,38 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            var bandVM = new BandVM
+            var bandVM = new EntityEditVM
             {
-                BandId = band.BandId,
+                Id = band.BandId,
                 IdentityUserId = band.IdentityUserId,
-                BandName = band.BandName,
-                ImageFileName = band.BandPicture,
+                Name = band.BandName,
+                PictureUrl = band.BandPicture,
                 Location = band.Location,
                 Address = band.Address,
                 Genre = band.Genre,
-                Latitude = band.Latitude,
-                Longitude = band.Longitude,
+                Details = band.Details,
                 IsOwner = band.IdentityUserId == _userManager.GetUserId(User)
             };
 
             ViewBag.Title = "Band";
-            return View(id, bandVM);
+            return View("_EntityEdit", bandVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, BandVM bandVM)
+        public async Task<IActionResult> Edit(string id, EntityEditVM bandVM)
         {
             _debugHelper.DebugWriteLine($"Received edit request for band ID: {id}");
             // we do this to make shure someone did not get on this page by filling random url
-            if (id != bandVM.BandId)
+            if (id != bandVM.Id)
             {
                 return NotFound();
             }
 
             // debugging message to know if there is something wrong when uploading and image is not shown
-            _debugHelper.DebugWriteLine("the picture url = " + bandVM.ImageFileName);
+            _debugHelper.DebugWriteLine("the picture url = " + bandVM.PictureUrl);
 
-            if (ModelState.IsValid)
+            if (bandVM != null)
             {
                 try
                 {
@@ -213,21 +218,23 @@ namespace MusicRising.Controllers
                         return NotFound();
                     }
 
-                    if (bandVM.Image != null)
+                    if (bandVM.Picture != null)
                     {
                         _debugHelper.DebugWriteLine("foto update is there");
-                        string filePath = ImageHelper.SaveImageToServer(_webHostEnvironment, bandVM.Image);
-                        bandVM.ImageFileName = filePath;
-                        band.BandPicture = filePath;
+                        string filePath = ImageHelper.UpdateImageOnServer(_webHostEnvironment, bandVM.Picture, bandVM.PictureUrl);
+                        bandVM.PictureUrl = filePath;
                     }
 
                     var bandCoordinates = await GeocodingHelper.GetCoordinatesAsync(bandVM.Address);
 
-                    band.BandName = bandVM.BandName;
+                    band.BandName = bandVM.Name;
                     band.Location = bandVM.Location;
                     band.Genre = bandVM.Genre;
+                    band.BandPicture = bandVM.PictureUrl;
                     band.Latitude = bandCoordinates.Latitude;
                     band.Longitude = bandCoordinates.Longitude;
+                    band.Details = bandVM.Details;
+                    band.BankAccount = "NotImplementedJet";
                     band.Address = bandVM.Address;
 
                     _debugHelper.DebugWriteLine("before update band");
@@ -237,7 +244,7 @@ namespace MusicRising.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BandExists(bandVM.BandId))
+                    if (!BandExists(bandVM.Id))
                     {
                         return NotFound();
                     }
@@ -247,7 +254,7 @@ namespace MusicRising.Controllers
                     }
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Landing));
             }
             else
             {

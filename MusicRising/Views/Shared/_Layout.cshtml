@@ -47,7 +47,15 @@
 @{
 // here we get the current page and if it is a page not having to do with finding bands/venues/etc we remove the bar from layout
 var path = HttpContextAccessor.HttpContext.Request.Path.ToString().ToLower();
-var showSelectionBar = !(path.Contains("/about") || path.Contains("/identity") || path.Contains("/home"));
+var showSelectionBar = !(path.Contains("/about") || 
+                            path.Contains("/identity") || 
+                            path.Contains("/home") || 
+                            path.Contains("/bands/landing")|| 
+                            path.Contains("/bands/details")||
+                            path.Contains("/venues/landing")||
+                            path.Contains("/venues/details")||
+                            path.Contains("/shows/landing")||
+                            path.Contains("/shows/details"));
 }
 
 @if (showSelectionBar)

@@ -1,0 +1,106 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # services:
+    #   mariadb:
+    #     image: mariadb:latest
+    #     ports:
+    #       - 3306:3306
+    #     env:
+    #       MYSQL_ROOT_PASSWORD: rootpassword
+    #       MYSQL_DATABASE: testdb
+    #       MYSQL_USER: testuser
+    #       MYSQL_PASSWORD: testpassword
+    #     options: >-
+    #       --health-cmd="mysqladmin ping --silent"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.x
+
+      # - name: Check if MariaDB is running
+      #   id: check_mariadb
+      #   run: |
+      #     if docker ps -q -f name=mariadb; then
+      #       echo "MariaDB is running"
+      #       echo "mariadb_running=true" >> $GITHUB_ENV
+      #     else
+      #       echo "MariaDB is not running"
+      #       echo "mariadb_running=false" >> $GITHUB_ENV
+      #     fi
+
+      # - name: Wait for MariaDB to be ready (if running)
+      #   if: env.mariadb_running == 'true'
+      #   run: |
+      #     echo "Waiting for MariaDB to be ready..."
+      #     for i in {1..30}; do
+      #       if docker exec $(docker ps -q -f name=mariadb) mysqladmin ping --silent; then
+      #         echo "MariaDB is ready"
+      #         break
+      #       fi
+      #       echo "Waiting..."
+      #       sleep 5
+      #     done
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Run tests
+        run: dotnet test --no-build --collect:"XPlat Code Coverage"
+
+      - name: Publish test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
+
+      - name: Publish code coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.cobertura.xml
+          flags: unittests
+          name: code-coverage
+
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up .NET Core
+  #       uses: actions/setup-dotnet@v1
+  #       with:
+  #         dotnet-version: 5.0
+
+  #     - name: Build
+  #       run: dotnet publish -c Release -o publish
+
+  #     - name: Deploy to server
+  #       run: |
+  #         # Add your deployment script here
+  #         echo "Deploying application..."
