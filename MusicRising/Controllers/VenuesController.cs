@@ -87,12 +87,14 @@ namespace MusicRising.Controllers
                 VenueId = venue.VenueId,
                 IdentityUserId = venue.IdentityUserId,
                 User = venue.User,
+                Address = venue.Address,
                 VenueName = venue.VenueName,
                 Image = null,
                 ImageFileName = venue.VenuePicture,
                 Location = venue.Location,
                 Genre = venue.Genre,
                 Shows = venue.Shows,
+                Details = venue.Details,
                 PromoItems = venue.PromoItems,
                 Ratings = venue.Ratings,
                 IsOwner = venue.IdentityUserId == _userManager.GetUserId(User)
@@ -128,6 +130,7 @@ namespace MusicRising.Controllers
                     VenuePicture = filePath,
                     Location = venue.Location,
                     Genre = venue.Genre,
+                    Details = venue.Details,
                     Latitude = VenueCoordinates.Latitude,
                     Longitude = VenueCoordinates.Longitude,
                     Address = VenueCoordinates.Address
@@ -161,6 +164,7 @@ namespace MusicRising.Controllers
                 Name = venue.VenueName,
                 PictureUrl = venue.VenuePicture,
                 Location = venue.Location,
+                Details = venue.Details,
                 Address = venue.Address,
                 Genre = venue.Genre,
                 IsOwner = venue.IdentityUserId == _userManager.GetUserId(User)
@@ -180,11 +184,11 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (venueVM != null)
             {
                 try
                 {
-                    var venue = await _venuesService.GetAll().FirstOrDefaultAsync(v => v.VenueId == id);
+                    var venue = await _venuesService.GetAll().FirstOrDefaultAsync(v => v.VenueId == venueVM.Id);
                     if (venue == null)
                     {
                         return NotFound();
@@ -202,6 +206,7 @@ namespace MusicRising.Controllers
                     venue.VenueName = venueVM.Name;
                     venue.Location = venueVM.Location;
                     venue.Genre = venueVM.Genre;
+                    venue.Details = venueVM.Details;
                    
                     venue.Latitude = VenueCoordinates.Latitude;
                     venue.Longitude = VenueCoordinates.Longitude;

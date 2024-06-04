@@ -19,35 +19,9 @@
                     <input type="hidden" asp-for="PictureUrl" class="form-control" readonly />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label">Name</label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
                     <label asp-for="Picture" class="control-label">Picture</label>
                     <input asp-for="Picture" class="form-control" type="file" accept="image/*" />
                     <span asp-validation-for="Picture" class="text-danger"></span>
-                </div>
-                
-                <div class="form-group">
-                    <label asp-for="Genre" class="control-label">Genre</label>
-                    <select asp-for="Genre" class="form-control" asp-items="Html.GetEnumSelectList<GenreEnum>()"></select>
-                    <span asp-validation-for="Genre" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Location" class="control-label">Location</label>
-                    <select asp-for="Location" class="form-control" asp-items="Html.GetEnumSelectList<LocationEnum>()"></select>
-                    <span asp-validation-for="Location" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Address" class="control-label">Address</label>
-                    <input asp-for="Address" class="form-control" />
-                    <span asp-validation-for="Address" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Details" class="control-label">About us</label>
-                    <input asp-for="Details" class="form-control" />
-                    <span asp-validation-for="Details" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Edit" class="btn btn-primary" />

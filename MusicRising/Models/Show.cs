@@ -32,6 +32,8 @@ public class Show
 
     public double BandFee { get; set; } 
     public bool Booked { get; set; }
+    
+    public bool BidByVenue { get; set; }
     public bool IsVenueOwner { get; set; }
     public bool IsBandMember { get; set; }
 }

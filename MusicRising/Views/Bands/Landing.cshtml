@@ -18,6 +18,7 @@
                         ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("~/Images/default.png"),
                         Title = band.BandName,
                         Description = $"{band.Genre} | {band.Location}",
+                        Address = $"{band.Address}",
                         Id = band.BandId
                     })
                 </div>

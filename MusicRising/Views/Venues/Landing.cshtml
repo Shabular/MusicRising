@@ -19,6 +19,7 @@
                     ImageUrl = Venue.VenuePicture != null ? Url.Content($"{Venue.VenuePicture}") : Url.Content("~/Images/default.png"),
                     Title = Venue.VenueName,
                     Description = $"{Venue.Genre} | {Venue.Location}",
+                    Address = $"{Venue.Address}",
                     Id = Venue.VenueId
                     })
                 </div>

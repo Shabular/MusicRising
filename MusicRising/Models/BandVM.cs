@@ -14,7 +14,8 @@ public class BandVM
     public IFormFile Image { get; set; }
     public string ImageFileName { get; set; }
     public LocationEnum Location { get; set; }
-    public string Address { get; set; }
+    public string? Address { get; set; }
+    public string? BankAccount { get; set; } 
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public GenreEnum Genre { get; set; }

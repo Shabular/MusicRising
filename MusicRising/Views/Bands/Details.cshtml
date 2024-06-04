@@ -10,10 +10,10 @@
     ImageFileName = Model.ImageFileName,
     Details = new Dictionary<string, string>
     {
-        {"Band Name", Model.BandName},
-        {"Location", Model.Location.ToString()},
         {"Genre", Model.Genre.ToString()},
-        {"Address", Model.Address}
+        {"Location", Model.Location.ToString()},
+        {"Address", Model.Address},
+        {"About us", Model.Details}
     },
     Id = Model.BandId,
     IsOwner = Model.IsOwner,

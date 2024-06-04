@@ -18,6 +18,7 @@ public class ShowVM
     public double? ShowFee { get; set; }
     public double BandFee { get; set; } = 50.00;
     public bool Booked { get; set; }
+    public bool BidByVenue { get; set; }
     public bool IsVenueOwner { get; set; } // Add this property
     public bool IsBandMember { get; set; } // Add this property
     

@@ -20,6 +20,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
             ImageUrl = show.HeadLiner != null && show.HeadLiner.BandPicture != null ? Url.Content($"{show.HeadLiner.BandPicture}") : Url.Content("~/Images/default.png"),
             Title = show.HeadLiner != null ? show.HeadLiner.BandName : "No Headliner",
             Description = $"{show.Genre} | {show.Venue?.VenueName} | {show.Venue?.Location}",
+            Address = $"{show.Venue.Address}",
             Date = show.Date.ToString("yyyy-MM-dd"),
             Id = show.ShowId
             })

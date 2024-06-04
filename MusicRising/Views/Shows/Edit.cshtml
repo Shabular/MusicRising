@@ -1,17 +1,16 @@
-@model MusicRising.Models.ShowVM
+@model MusicRising.Models.EntityEditVM
 
 @{
     ViewData["Title"] = "Edit Show";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("_EntityEdit", new MusicRising.Models.EntityEditVM
+@Html.Partial("_ShowEntityEdit", new MusicRising.Models.EntityEditVM
 {
-    Id = Model.ShowId,
+    Id = Model.Id,
     IdentityUserId = Model.Venue.IdentityUserId,
-    Name = Model.HeadLiner.BandName ?? "Show",
-    PictureUrl = Model.PromoLink,
+    PictureUrl = Model.PictureUrl,
     Location = Model.Venue.Location,
     Genre = Model.Genre,
-    IsOwner = Model.IsVenueOwner
+    IsOwner = Model.IsOwner
 })

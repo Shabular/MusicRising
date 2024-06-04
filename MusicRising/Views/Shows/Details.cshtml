@@ -11,9 +11,11 @@
     Details = new Dictionary<string, string>
     {
         {"Venue", Model.Venue.VenueName},
+        { "Address", Model.Venue.Address },
         {"Date", Model.Date.ToShortDateString()},
         {"Genre", Model.Genre.ToString()},
-        {"Show Fee", Model.ShowFee.ToString()}
+        {"Show Fee", Model.ShowFee.ToString()},
+        {"Details", Model.Details}
     },
     Id = Model.ShowId,
     IsOwner = Model.IsVenueOwner,

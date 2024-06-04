@@ -26,7 +26,8 @@ public class Band
     public List<PromoItem>? PromoItems { get; set; }
     public List<Rating>? Ratings { get; set; }
         
-    public string Address { get; set; }
+    public string? Address { get; set; }
+    public string? BankAccount { get; set; } = "Not implemented jet";
     public double Latitude { get; set; }
     public double Longitude { get; set; }
 }
