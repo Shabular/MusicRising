@@ -1,0 +1,83 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model MusicRising.Models.ShowVM
+
+@{
+ViewData["Title"] = "Show Details";
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card d-flex flex-row">
+        <div class="col-md-4 p-0">
+            @if (Model.PromoLink != null)
+            {
+                <img src="~/Images/@Model.PromoLink" alt="@Model.HeadLiner.BandName" class="img-fluid" style="height: 100%; width: 100%; object-fit: cover;">
+            }
+        </div>
+        <div class="col-md-4">
+            <div class="card-body">
+                <h3 class="card-title">@Model.HeadLiner.BandName</h3>
+                <dl class="row">
+                    
+                        <dt class="col-sm-4">Bid</dt>
+                        <dd class="col-sm-8">@Model.BandFee</dd>
+                </dl>
+
+                @if (Model.BidByVenue && Model.IsBandMember)
+                {
+                <div>
+                    <form asp-action="Bid" method="post">
+                        <input type="hidden" name="showId" value="@Model.ShowId" />
+                        <div>
+                            <label for="bidAmount">New Bid Amount:</label>
+                            <input type="number" id="bidAmount" name="bidAmount" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Bid</button>
+                    </form>
+                </div>
+                }
+                else if (!Model.BidByVenue && Model.IsVenueOwner)
+                {
+                <div>
+                    <h4>Bid Actions for Venue Owner</h4>
+                    <form asp-action="Bid" method="post">
+                        <input type="hidden" name="showId" value="@Model.ShowId" />
+                        <div>
+                            <label for="bidAmount">New Bid Amount:</label>
+                            <input type="number" id="bidAmount" name="bidAmount" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Bid</button>
+                    </form>
+                </div>
+                }
+                else
+                {
+                <p>Bidding in progress</p>
+
+                }
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </div>
+       
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function initMap() {
+        var latitude = @Model.Venue.Latitude;
+        var longitude = @Model.Venue.Longitude;
+        var location = { lat: latitude, lng: longitude };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: location
+        });
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+    }
+
+    initMap();
+</script>
+}
