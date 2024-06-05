@@ -23,7 +23,7 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                         <dd class="col-sm-8">@Model.BandFee</dd>
                 </dl>
 
-                @if (Model.BidByVenue && Model.IsBandMember)
+                @if ((Model.BidByVenue && Model.IsBandMember) || (!Model.BidByVenue && Model.IsVenueOwner))
                 {
                 <div>
                     <form asp-action="Bid" method="post">
@@ -34,28 +34,14 @@ Layout = "~/Views/Shared/_Layout.cshtml";
                         </div>
                         <button type="submit" class="btn btn-primary">Submit Bid</button>
                     </form>
-                </div>
-                }
-                else if (!Model.BidByVenue && Model.IsVenueOwner)
-                {
-                <div>
-                    <h4>Bid Actions for Venue Owner</h4>
-                    <form asp-action="Bid" method="post">
+                    <form asp-action="BidAccept" method="post">
                         <input type="hidden" name="showId" value="@Model.ShowId" />
-                        <div>
-                            <label for="bidAmount">New Bid Amount:</label>
-                            <input type="number" id="bidAmount" name="bidAmount" required />
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit Bid</button>
+                        
+                        <button type="submit" class="btn btn-primary">Accept Bid</button>
                     </form>
                 </div>
                 }
-                else
-                {
-                <p>Bidding in progress</p>
-
-                }
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <a asp-action="Landing" class="btn btn-secondary">Back</a>
             </div>
         </div>
        

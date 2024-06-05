@@ -31,13 +31,11 @@
                                     {
                                         <a asp-action="Bid" asp-route-id="@show.ShowId" class="btn btn-primary">Bidding</a>
                                     }
-                                    @if (show.IsVenueOwner)
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@show.ShowId" class="btn btn-primary">Edit</a>
-                                        <a asp-action="Delete" asp-route-id="@show.ShowId" class="btn btn-danger">Delete</a>
-                                    }
-
-                                    
+                                }
+                                @if (show.IsVenueOwner)
+                                {
+                                <a asp-action="Edit" asp-route-id="@show.ShowId" class="btn btn-primary">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@show.ShowId" class="btn btn-danger">Delete</a>
                                 }
                             </div>
                         </div>

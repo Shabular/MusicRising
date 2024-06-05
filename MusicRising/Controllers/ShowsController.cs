@@ -390,14 +390,7 @@ namespace MusicRising.Controllers
             var bandId = show.BandId;
             var venueId = show.VenueId;
 
-            if (userID == bandId)
-            {
-                show.IsBandMember = true;
-            }
-            else
-            {
-                show.IsVenueOwner = true;
-            }
+            
             
 
             var showVM = new ShowVM
@@ -419,6 +412,30 @@ namespace MusicRising.Controllers
                 IsBandMember = show.IsBandMember
             };
 
+            if (userID == showVM.HeadLiner.IdentityUserId)
+            {
+                showVM.IsBandMember = true;
+            }
+            else
+            {
+                showVM.IsBandMember = false;
+            }
+           
+            if (userID == showVM.Venue.IdentityUserId)
+            {
+                showVM.IsVenueOwner = true;
+            }
+            else
+            {
+                showVM.IsVenueOwner = false;
+            }
+            
+            
+            _debugHelper.DebugWriteLine("by venue: " + showVM.BidByVenue);
+            _debugHelper.DebugWriteLine("band member: " + showVM.IsBandMember);
+            _debugHelper.DebugWriteLine("venue owner: " + showVM.IsVenueOwner);
+            
+            
             return View(showVM);
         }
         
@@ -436,38 +453,33 @@ namespace MusicRising.Controllers
                 return NotFound("Show not found.");
             }
 
-            if (!show.BidByVenue)
-            {
-                if (show.IsBandMember)
-                {
-                    show.BandFee = bidAmount;
-                    show.Booked = false;
-                }
-                else
-                {
-                    return BadRequest("Venue owner cannot change the bid when BidByVenue is true.");
-                }
-            }
-            else
-            {
-                if (show.IsVenueOwner)
-                {
-                    show.ShowFee = bidAmount;
-                    show.Booked = false;
-                }
-                else
-                {
-                    return BadRequest("Band cannot change the bid when BidByVenue is false.");
-                }
-            }
+            show.BandFee = bidAmount;
+            show.Booked = false;
+            show.BidByVenue = !show.BidByVenue;
 
             await _showsService.Update(show);
-            return Ok("Bid handled successfully.");
+            return View(show.ShowId);
         }
         
-        
-        
-        
+        [HttpPost]
+        public async Task<IActionResult> BidAccept(string showId)
+        {
+            _debugHelper.DebugWriteLine("accepting bid");
+            var show = await _showsService.GetAll()
+                .Include(s => s.HeadLiner)
+                .Include(s => s.Venue)
+                .FirstOrDefaultAsync(s => s.ShowId == showId);
+            if (show == null)
+            {
+                _debugHelper.DebugWriteLine("Biding post has not found show");
+                return NotFound("Show not found.");
+            }
+
+            show.Booked = true;
+
+            await _showsService.Update(show);
+            return RedirectToAction(nameof(Index));
+        }
 
         // POST: Shows/Delete/5
         [HttpPost, ActionName("Delete")]

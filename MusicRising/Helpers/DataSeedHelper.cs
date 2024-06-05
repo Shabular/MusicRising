@@ -49,14 +49,18 @@ public class DataSeeder
         // Create users
         var user1 = new IdentityUser { UserName = "admin", Email = "admin@mr.com" };
         var user2 = new IdentityUser { UserName = "user2", Email = "user2@example.com" };
+        var user3 = new IdentityUser { UserName = "bandowner", Email = "bandowner@example.com" };
+        var user4 = new IdentityUser { UserName = "venueowner", Email = "venueowner@example.com" };
         await _userManager.CreateAsync(user1, "Password123!");
         await _userManager.CreateAsync(user2, "Password123!");
+        await _userManager.CreateAsync(user3, "Password123!");
+        await _userManager.CreateAsync(user4, "Password123!");
 
         // Create bands
         var band1 = new Band
         {
             BandId = Guid.NewGuid().ToString(),
-            IdentityUserId = user1.Id,
+            IdentityUserId = user3.Id,
             BandName = "The Side Chicks",
             Location = LocationEnum.NoordBrabant,
             BandPicture = "sidechicks.jpg",
@@ -70,7 +74,7 @@ public class DataSeeder
         var band2 = new Band
         {
             BandId = Guid.NewGuid().ToString(),
-            IdentityUserId = user2.Id,
+            IdentityUserId = user3.Id,
             BandName = "Bad Religion",
             Location = LocationEnum.NoordBrabant,
             Details = "One of the most amazing punk rock bands, songs like punk rock song and ephipany realy do the charm",
@@ -84,7 +88,7 @@ public class DataSeeder
         var band3 = new Band
         {
             BandId = Guid.NewGuid().ToString(),
-            IdentityUserId = user2.Id,
+            IdentityUserId = user3.Id,
             BandName = "Imagine Dragons",
             BandPicture = "id.jpg",
             Details = "Do i realy need to tell who we are?",
@@ -103,7 +107,7 @@ public class DataSeeder
         var venue1 = new Venue
         {
             VenueId = Guid.NewGuid().ToString(),
-            IdentityUserId = user1.Id,
+            IdentityUserId = user4.Id,
             VenueName = "De klomp",
             Location = LocationEnum.Utrecht,
             VenuePicture = "klomp.jpg",
@@ -117,7 +121,7 @@ public class DataSeeder
         var venue2 = new Venue
         {
             VenueId = Guid.NewGuid().ToString(),
-            IdentityUserId = user2.Id,
+            IdentityUserId = user4.Id,
             VenueName = "Krisjes",
             Location = LocationEnum.NoordBrabant,
             VenuePicture = "krisjes.jpg",
@@ -131,7 +135,7 @@ public class DataSeeder
         var venue3 = new Venue
         {
             VenueId = Guid.NewGuid().ToString(),
-            IdentityUserId = user2.Id,
+            IdentityUserId = user4.Id,
             VenueName = "Zalinaz",
             Location = LocationEnum.Zeeland,
             VenuePicture = "zalinaz.jpg",
