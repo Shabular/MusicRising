@@ -1,4 +1,5 @@
-﻿@model List<Venue>
+﻿@using Microsoft.CodeAnalysis
+@model List<Venue>
 
 @{
     ViewData["Title"] = "My Bands";
@@ -18,7 +19,8 @@
                     @Html.Partial("_Card", new {
                     ImageUrl = Venue.VenuePicture != null ? Url.Content($"{Venue.VenuePicture}") : Url.Content("~/Images/default.png"),
                     Title = Venue.VenueName,
-                    Description = $"{Venue.Genre} | {Venue.Location}",
+                    Description = $"Genre: {Venue.Genre} ",
+                    Location = Venue.Location,
                     Address = $"{Venue.Address}",
                     Id = Venue.VenueId
                     })

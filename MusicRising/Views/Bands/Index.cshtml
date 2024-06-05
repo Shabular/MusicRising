@@ -1,3 +1,4 @@
+@using Mono.TextTemplating
 @model List<Band>
 
 @{
@@ -13,8 +14,8 @@
                 @Html.Partial("_Card", new {
                     ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("default.png"),
                     Title = band.BandName,
-                    Description = $"{band.Genre} | {band.Location}",
-                    Address = $"{band.Address}",
+                    Description = $"{band.Genre}",
+                    Location = band.Location,
                     Id = band.BandId
                 })
             </div>

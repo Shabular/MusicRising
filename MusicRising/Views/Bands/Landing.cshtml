@@ -1,4 +1,5 @@
-﻿@model List<Band>
+﻿@using Mono.TextTemplating
+@model List<Band>
 
 @{
     ViewData["Title"] = "My Bands";
@@ -17,7 +18,8 @@
                     @Html.Partial("_Card", new {
                         ImageUrl = band.BandPicture != null ? Url.Content($"{band.BandPicture}") : Url.Content("~/Images/default.png"),
                         Title = band.BandName,
-                        Description = $"{band.Genre} | {band.Location}",
+                        Description = $"Genre: {band.Genre}",
+                        Location = band.Location,
                         Address = $"{band.Address}",
                         Id = band.BandId
                     })
