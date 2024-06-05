@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model dynamic
 
+
 <div class="container mt-4">
     <div class="card d-flex flex-row">
         <div class="col-md-4 p-0">
@@ -15,10 +16,11 @@
                 <dl class="row">
                     @foreach (var detail in Model.Details)
                     {
-                    <dt class="col-sm-4">@detail.Key</dt>
-                    <dd class="col-sm-8">@detail.Value</dd>
+                        <dt class="col-sm-4">@detail.Key</dt>
+                        <dd class="col-sm-8">@detail.Value</dd>
                     }
                 </dl>
+                
                 @if (Model.IsOwner)
                 {
                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>

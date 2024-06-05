@@ -239,6 +239,7 @@ namespace MusicRising.Controllers
                     Details = bookingVm.showVM.Details,
                     ShowFee = bookingVm.showVM.ShowFee,
                     BandFee = bookingVm.showVM.BandFee,
+                    BidByVenue = true,
                     Booked = false
                 };
                 await _showsService.Add(showObj);
@@ -370,6 +371,103 @@ namespace MusicRising.Controllers
 
             return View(show);
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> Bid(string id)
+        {
+            _debugHelper.DebugWriteLine("Biding get got showID" + id);
+            var show = await _showsService.GetAll()
+                .Include(s => s.HeadLiner)
+                .Include(s => s.Venue)
+                .FirstOrDefaultAsync(s => s.ShowId == id);
+            if (show == null)
+            {
+                _debugHelper.DebugWriteLine("Biding get has not found show");
+                return NotFound("Show not found.");
+            }
+
+            string userID = _userManager.GetUserId(User);
+            var bandId = show.BandId;
+            var venueId = show.VenueId;
+
+            if (userID == bandId)
+            {
+                show.IsBandMember = true;
+            }
+            else
+            {
+                show.IsVenueOwner = true;
+            }
+            
+
+            var showVM = new ShowVM
+            {
+                ShowId = show.ShowId,
+                VenueId = show.VenueId,
+                Venue = show.Venue,
+                BandId = show.BandId,
+                HeadLiner = show.HeadLiner,
+                Genre = show.Genre,
+                Date = show.Date,
+                PromoLink = show.PromoLink,
+                Details = show.Details,
+                ShowFee = show.ShowFee,
+                BandFee = show.BandFee,
+                Booked = show.Booked,
+                BidByVenue = show.BidByVenue,
+                IsVenueOwner = show.IsVenueOwner,
+                IsBandMember = show.IsBandMember
+            };
+
+            return View(showVM);
+        }
+        
+        
+        [HttpPost]
+        public async Task<IActionResult> Bid(string showId, double bidAmount)
+        {
+            var show = await _showsService.GetAll()
+                .Include(s => s.HeadLiner)
+                .Include(s => s.Venue)
+                .FirstOrDefaultAsync(s => s.ShowId == showId);
+            if (show == null)
+            {
+                _debugHelper.DebugWriteLine("Biding post has not found show");
+                return NotFound("Show not found.");
+            }
+
+            if (!show.BidByVenue)
+            {
+                if (show.IsBandMember)
+                {
+                    show.BandFee = bidAmount;
+                    show.Booked = false;
+                }
+                else
+                {
+                    return BadRequest("Venue owner cannot change the bid when BidByVenue is true.");
+                }
+            }
+            else
+            {
+                if (show.IsVenueOwner)
+                {
+                    show.ShowFee = bidAmount;
+                    show.Booked = false;
+                }
+                else
+                {
+                    return BadRequest("Band cannot change the bid when BidByVenue is false.");
+                }
+            }
+
+            await _showsService.Update(show);
+            return Ok("Bid handled successfully.");
+        }
+        
+        
+        
+        
 
         // POST: Shows/Delete/5
         [HttpPost, ActionName("Delete")]
