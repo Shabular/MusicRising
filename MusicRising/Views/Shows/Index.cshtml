@@ -1,4 +1,5 @@
 @using System.Globalization
+@using Microsoft.CodeAnalysis
 @using MusicRising.Data.Services
 @model List<MusicRising.Models.Show>
 
@@ -19,8 +20,8 @@ Layout = "~/Views/Shared/_Layout.cshtml";
             @Html.Partial("_Card", new {
             ImageUrl = show.HeadLiner != null && show.HeadLiner.BandPicture != null ? Url.Content($"{show.HeadLiner.BandPicture}") : Url.Content("~/Images/default.png"),
             Title = show.HeadLiner != null ? show.HeadLiner.BandName : "No Headliner",
-            Description = $"{show.Genre} | {show.Venue?.VenueName} | {show.Venue?.Location}",
-            Address = $"{show.Venue.Address}",
+            Description = $"{show.Genre} | {show.Venue?.VenueName}",
+            Location = show.Venue?.Location,
             Date = show.Date.ToString("yyyy-MM-dd"),
             Id = show.ShowId
             })
