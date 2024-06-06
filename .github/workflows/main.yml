@@ -20,6 +20,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 8.x
+          
+      - name: Restore dependencies
+        run: dotnet restore
 
       - name: Setup-Packages-dependencies
         run: dotnet add package Moq
@@ -32,10 +35,6 @@ jobs:
           
       - name: Setup-Packages-dependencies  
         run: dotnet add reference ../MusicRising/MusicRising.csproj 
-
-          
-      - name: Restore dependencies
-        run: dotnet restore
 
       - name: Build
         run: dotnet build --no-restore
