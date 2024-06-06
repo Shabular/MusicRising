@@ -261,6 +261,12 @@ namespace MusicRising.Controllers
                 .Include(s => s.HeadLiner)
                 .Include(s => s.Venue)
                 .FirstOrDefaultAsync(s => s.ShowId == id);
+            
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (show == null)
             {
                 return NotFound();
@@ -298,6 +304,10 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string view, EntityEditVM showVM)
         {
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), showVM.Venue.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
             try
             {
                 _debugHelper.DebugWriteLine("headliner name " + (showVM.HeadLiner?.BandName ?? "Unknown"));
@@ -358,6 +368,12 @@ namespace MusicRising.Controllers
                 .Include(s => s.HeadLiner)
                 .Include(s => s.Venue)
                 .FirstOrDefaultAsync(s => s.ShowId == id);
+            
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (show == null)
             {
                 return NotFound();
@@ -390,7 +406,10 @@ namespace MusicRising.Controllers
             var bandId = show.BandId;
             var venueId = show.VenueId;
 
-            
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
+            {
+                return RedirectToAction(nameof(Index));
+            }
             
 
             var showVM = new ShowVM
@@ -452,6 +471,11 @@ namespace MusicRising.Controllers
                 _debugHelper.DebugWriteLine("Biding post has not found show");
                 return NotFound("Show not found.");
             }
+            
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             show.BandFee = bidAmount;
             show.Booked = false;
@@ -469,6 +493,12 @@ namespace MusicRising.Controllers
                 .Include(s => s.HeadLiner)
                 .Include(s => s.Venue)
                 .FirstOrDefaultAsync(s => s.ShowId == showId);
+            
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (show == null)
             {
                 _debugHelper.DebugWriteLine("Biding post has not found show");
@@ -487,6 +517,12 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
+            
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (show != null)
             {
                 var userId = _userManager.GetUserId(User);
