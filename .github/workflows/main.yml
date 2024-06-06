@@ -30,14 +30,17 @@ jobs:
       - name: Run tests
         run: dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test_results.trx" --results-directory ./TestResults
 
-      - name: List Test Results Directory
-        run: ls -R ./TestResults
+      - name: Check if TestResults directory exists
+        run: if [ -d "./TestResults" ]; then echo "TestResults directory exists"; else echo "TestResults directory does not exist"; fi
+
+      - name: List directory after tests
+        run: ls -R
 
       - name: Publish test results
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: './TestResults/*.trx'
+          path: '**/TestResults/*.trx'
 
       - name: Publish code coverage
         uses: codecov/codecov-action@v1
@@ -48,4 +51,4 @@ jobs:
           name: code-coverage
 
       - name: Display test results
-        run: cat ./TestResults/test_results.trx
+        run: cat **/TestResults/test_results.trx
