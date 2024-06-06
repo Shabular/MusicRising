@@ -59,6 +59,3 @@ jobs:
           files: $GITHUB_WORKSPACE/TestResults/coverage.cobertura.xml
           flags: unittests
           name: code-coverage
-
-      - name: Display test results
-        run: cat $GITHUB_WORKSPACE/TestResults/test_results.trx
