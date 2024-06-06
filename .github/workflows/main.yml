@@ -32,9 +32,10 @@ jobs:
 
       - name: Run tests
         run: |
-          dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$GITHUB_WORKSPACE/TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults
+          dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$GITHUB_WORKSPACE/TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults > $GITHUB_WORKSPACE/TestResults/test_output.log 2>&1
           if [ $? -ne 0 ]; then
             echo "Test runner failed"
+            cat $GITHUB_WORKSPACE/TestResults/test_output.log
             exit 1
           fi
 
@@ -44,11 +45,17 @@ jobs:
       - name: List TestResults directory
         run: ls -R $GITHUB_WORKSPACE/TestResults
 
-      - name: Publish test results
+      - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
           name: test-results
           path: $GITHUB_WORKSPACE/TestResults/test_results.trx
+
+      - name: Upload test output log
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-output-log
+          path: $GITHUB_WORKSPACE/TestResults/test_output.log
 
       - name: Publish code coverage
         uses: codecov/codecov-action@v1
