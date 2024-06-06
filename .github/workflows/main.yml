@@ -39,12 +39,6 @@ jobs:
             exit 1
           fi
 
-      - name: Check if TestResults directory exists
-        run: if [ -d "$GITHUB_WORKSPACE/TestResults" ]; then echo "TestResults directory exists"; else echo "TestResults directory does not exist"; fi
-
-      - name: List TestResults directory
-        run: ls -R $GITHUB_WORKSPACE/TestResults
-
       - name: Upload test results
         uses: actions/upload-artifact@v2
         with:
