@@ -27,8 +27,11 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
 
+      - name: Ensure TestResults directory exists
+        run: mkdir -p ./TestResults
+
       - name: Run tests
-        run: dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test_results.trx" --results-directory ./TestResults
+        run: dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test_results.trx" --results-directory ./TestResults || (echo "Test runner failed" && exit 1)
 
       - name: Check if TestResults directory exists
         run: if [ -d "./TestResults" ]; then echo "TestResults directory exists"; else echo "TestResults directory does not exist"; fi
@@ -51,4 +54,4 @@ jobs:
           name: code-coverage
 
       - name: Display test results
-        run: cat **/TestResults/test_results.trx
+        run: cat ./TestResults/test_results.trx
