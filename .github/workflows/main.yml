@@ -32,7 +32,9 @@ jobs:
 
       - name: Run tests
         run: |
+          echo "Running tests..."
           dotnet test --no-build --logger:"trx;LogFileName=$GITHUB_WORKSPACE/TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults | tee $GITHUB_WORKSPACE/TestResults/test_output.log
+          echo "Test run completed."
           if [ $? -ne 0 ]; then
             echo "Test runner failed"
             cat $GITHUB_WORKSPACE/TestResults/test_output.log
@@ -64,7 +66,7 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: $GITHUB_WORKSPACE/TestResults/coverage.cobertura.xml
+          files: $GITHUB_WORKSPACE/TestResults/**/coverage.cobertura.xml
           flags: unittests
           name: code-coverage
 
