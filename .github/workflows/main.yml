@@ -28,11 +28,11 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Ensure TestResults directory exists
-        run: mkdir -p $GITHUB_WORKSPACE/TestResults
+        run: mkdir -p ./TestResults
 
       - name: Run tests
         run: |
-          dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$GITHUB_WORKSPACE/TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults > $GITHUB_WORKSPACE/TestResults/test_output.log 2>&1
+          dotnet test --no-build --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=./TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults > ./TestResults/test_output.log 2>&1
           if [ $? -ne 0 ]; then
             echo "Test runner failed"
             cat $GITHUB_WORKSPACE/TestResults/test_output.log
@@ -43,19 +43,19 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: $GITHUB_WORKSPACE/TestResults/test_results.trx
+          path: ./TestResults/test_results.trx
 
       - name: Upload test output log
         uses: actions/upload-artifact@v2
         with:
           name: test-output-log
-          path: $GITHUB_WORKSPACE/TestResults/test_output.log
+          path: ./TestResults/test_output.log
 
       - name: Publish code coverage
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: $GITHUB_WORKSPACE/TestResults/**/coverage.cobertura.xml
+          files: ./TestResults/**/coverage.cobertura.xml
           flags: unittests
           name: code-coverage
 
