@@ -21,12 +21,19 @@ jobs:
         with:
           dotnet-version: 8.x
 
-      - name: Setup-Packages dependencies
-          run: dotnet add package Moq
-          run: dotnet add package Microsoft.EntityFrameworkCore.InMemory
-          run: dotnet add package coverlet.collector
-          run: dotnet add reference ../MusicRising/MusicRising.csproj 
+      - name: Setup-Packages-dependencies
+        run: dotnet add package Moq
 
+      - name: Setup-Packages-dependencies
+        run: dotnet add package Microsoft.EntityFrameworkCore.InMemory
+
+      - name: Setup-Packages-dependencies
+        run: dotnet add package coverlet.collector
+          
+      - name: Setup-Packages-dependencies  
+        run: dotnet add reference ../MusicRising/MusicRising.csproj 
+
+          
       - name: Restore dependencies
         run: dotnet restore
 
