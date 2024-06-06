@@ -24,18 +24,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Setup-Packages-dependencies
-        run: dotnet add package Moq
-
-      - name: Setup-Packages-dependencies
-        run: dotnet add package Microsoft.EntityFrameworkCore.InMemory
-
-      - name: Setup-Packages-dependencies
-        run: dotnet add package coverlet.collector
-          
-      - name: Setup-Packages-dependencies  
-        run: dotnet add reference ../MusicRising/MusicRising.csproj 
-
       - name: Build
         run: dotnet build --no-restore
 
