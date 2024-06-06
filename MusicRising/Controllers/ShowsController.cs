@@ -458,7 +458,7 @@ namespace MusicRising.Controllers
             show.BidByVenue = !show.BidByVenue;
 
             await _showsService.Update(show);
-            return View(show.ShowId);
+            return RedirectToAction(nameof(Landing));
         }
         
         [HttpPost]
@@ -478,7 +478,7 @@ namespace MusicRising.Controllers
             show.Booked = true;
 
             await _showsService.Update(show);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Landing));
         }
 
         // POST: Shows/Delete/5
