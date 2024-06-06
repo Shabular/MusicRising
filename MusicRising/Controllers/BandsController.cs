@@ -70,7 +70,11 @@ namespace MusicRising.Controllers
                 .Where(b => b.IdentityUserId == userId)
                 .ToListAsync();
 
-            return View(userBands);
+            if (AuthHelper.Authorize(userId, userBands.FirstOrDefault().IdentityUserId))
+            {
+                return View(userBands);
+            }
+                return RedirectToAction(nameof(Index));
         }
 
         // GET: Bands/Details/5
@@ -91,6 +95,7 @@ namespace MusicRising.Controllers
             {
                 return NotFound();
             }
+            
 
             // create viewmodel to get beter / other data then in model
             var bandVM = new BandVM
@@ -130,6 +135,9 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BandVM band)
         {
+            if (_userManager.GetUserId(User) == null) return RedirectToAction(nameof(Index));
+
+            
             // if you create a band you should upload image
             if (band.Image != null)
             {
@@ -175,6 +183,11 @@ namespace MusicRising.Controllers
             {
                 return NotFound();
             }
+            
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), band.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             var bandVM = new EntityEditVM
             {
@@ -197,6 +210,10 @@ namespace MusicRising.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, EntityEditVM bandVM)
         {
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), bandVM.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
             _debugHelper.DebugWriteLine($"Received edit request for band ID: {id}");
             // we do this to make shure someone did not get on this page by filling random url
             if (id != bandVM.Id)
@@ -271,6 +288,7 @@ namespace MusicRising.Controllers
         // GET: Bands/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+            
             if (id == null)
             {
                 return NotFound();
@@ -279,6 +297,12 @@ namespace MusicRising.Controllers
             var band = await _bandsService.GetAll()
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(b => b.BandId == id);
+            
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), band.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (band == null)
             {
                 return NotFound();
@@ -293,6 +317,12 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
+            
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), band.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (band != null)
             {
                 await _bandsService.Delete(band);

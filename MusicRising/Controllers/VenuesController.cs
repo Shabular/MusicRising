@@ -156,6 +156,11 @@ namespace MusicRising.Controllers
             {
                 return NotFound();
             }
+            
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), venue.IdentityUserId)))
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             var venueVM = new EntityEditVM
             {
@@ -186,6 +191,10 @@ namespace MusicRising.Controllers
 
             if (venueVM != null)
             {
+                if ((!AuthHelper.Authorize(_userManager.GetUserId(User), venueVM.IdentityUserId)))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 try
                 {
                     var venue = await _venuesService.GetAll().FirstOrDefaultAsync(v => v.VenueId == venueVM.Id);
@@ -246,6 +255,11 @@ namespace MusicRising.Controllers
             {
                 return NotFound();
             }
+            
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), venue.IdentityUserId)))
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return View(venue);
         }
@@ -256,6 +270,11 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var venue = await _venuesService.GetAll().FirstOrDefaultAsync(v => v.VenueId == id);
+            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), venue.IdentityUserId)))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
             if (venue != null)
             {
                 await _venuesService.Delete(venue);
