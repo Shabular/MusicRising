@@ -28,12 +28,12 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Ensure TestResults directory exists
-        run: mkdir -p $GITHUB_WORKSPACE/TestResults
+        run: mkdir -p $GITHUB_WORKSPACE/TestResults/TestResults
 
       - name: Run tests
         run: |
           echo "Running tests..."
-          dotnet test --no-build --logger:"trx;LogFileName=$GITHUB_WORKSPACE/TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults | tee $GITHUB_WORKSPACE/TestResults/test_output.log
+          dotnet test --no-build --logger:"trx;LogFileName=$GITHUB_WORKSPACE/TestResults/TestResults/test_results.trx" --results-directory $GITHUB_WORKSPACE/TestResults/TestResults | tee $GITHUB_WORKSPACE/TestResults/test_output.log
           echo "Test run completed."
           if [ $? -ne 0 ]; then
             echo "Test runner failed"
@@ -42,10 +42,10 @@ jobs:
           fi
 
       - name: Check if TestResults directory exists
-        run: if [ -d "$GITHUB_WORKSPACE/TestResults" ]; then echo "TestResults directory exists"; else echo "TestResults directory does not exist"; fi
+        run: if [ -d "$GITHUB_WORKSPACE/TestResults/TestResults" ]; then echo "TestResults directory exists"; else echo "TestResults directory does not exist"; fi
 
       - name: List TestResults directory
-        run: ls -R $GITHUB_WORKSPACE/TestResults
+        run: ls -R $GITHUB_WORKSPACE/TestResults/TestResults
 
       - name: Display test output log
         run: cat $GITHUB_WORKSPACE/TestResults/test_output.log
@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: $GITHUB_WORKSPACE/TestResults/test_results.trx
+          path: $GITHUB_WORKSPACE/TestResults/TestResults/test_results.trx
 
       - name: Upload test output log
         uses: actions/upload-artifact@v2
@@ -66,9 +66,9 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: $GITHUB_WORKSPACE/TestResults/**/coverage.cobertura.xml
+          files: $GITHUB_WORKSPACE/TestResults/TestResults/**/coverage.cobertura.xml
           flags: unittests
           name: code-coverage
 
       - name: Display test results
-        run: cat $GITHUB_WORKSPACE/TestResults/test_results.trx
+        run: cat $GITHUB_WORKSPACE/TestResults/TestResults/test_results.trx
