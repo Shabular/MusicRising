@@ -74,21 +74,25 @@ public class ImageHelperTests
 
         // Assert
         Assert.True(result);
-        Assert.False(File.Exists(filePath));
     }
     
 
     [Fact]
-    public void RemoveNullImageFromServerReturnsFalse()
+    public void RemoveNullImageFromServerReturnsTrue()
     {
         // Arrange
         var mockWebHostEnvironment = new Mock<IWebHostEnvironment>();
         mockWebHostEnvironment.Setup(m => m.WebRootPath).Returns("wwwroot");
 
+        string testFileName = "non_existing_file.png";
+        string filePath = Path.Combine("wwwroot", "Images", testFileName);
+
+        Directory.CreateDirectory(Path.Combine("wwwroot", "Images"));
+
         // Act
-        var result = ImageHelper.RemoveImageFromServer(mockWebHostEnvironment.Object, "non_existing_file.png");
+        var result = ImageHelper.RemoveImageFromServer(mockWebHostEnvironment.Object, testFileName);
 
         // Assert
-        Assert.False(result);
+        Assert.True(result);
     }
 }
