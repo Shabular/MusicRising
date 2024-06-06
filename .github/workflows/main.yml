@@ -28,7 +28,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Ensure TestResults directory exists
-        run: mkdir -p $GITHUB_WORKSPACE/TestResults
+        run: mkdir -p $GITHUB_WORKSPACE/TestResults/TestResults
 
       - name: Run tests
         run: |
@@ -37,7 +37,7 @@ jobs:
           echo "Test run completed."
           if [ $? -ne 0 ]; then
             echo "Test runner failed"
-            cat $GITHUB_WORKSPACE/TestResults/TestResults/test_output.log
+            cat $GITHUB_WORKSPACE/TestResults/test_output.log
             exit 1
           fi
 
