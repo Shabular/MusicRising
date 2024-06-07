@@ -1,18 +1,24 @@
 /* General styles */
 body {
-  background-color: #1C1C1C; /* Dark Background */
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  color: #E0E0E0; /* Light Gray Text */
+  background: url('../Images/background-2.webp') no-repeat center center fixed;
+  background-size: cover;
+  color: #E0E0E0; /* Ensure text is readable against the background */
+  padding-top: 70px; /* Adjust this value based on the height of your navbar */
+}
+
+.logo {
+  height: 40px; /* Adjust this height to fit your navbar */
+  width: auto; /* Maintain aspect ratio */
+  margin-right: 10px;
 }
 
 /* Navbar styles */
 .navbar {
   background-color: #2E2E2E; /* Dark Gray */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  position: sticky;
+  position: fixed;
   top: 0;
+  width: 100%;
   z-index: 1000;
 }
 

@@ -16,7 +16,10 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Music Rising</a>
+            <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                <img src="~/Images/music-rising-logo.png" alt="Music Rising Logo" class="logo">
+                <span>Music Rising</span>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -27,15 +30,15 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Bands" asp-action="Landing">My Bands</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Venues" asp-action="Landing">My Venues</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Shows" asp-action="Landing">My Shows</a>
-                        </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Bands" asp-action="Landing">My Bands</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Venues" asp-action="Landing">My Venues</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Shows" asp-action="Landing">My Shows</a>
+                    </li>
                     }
                 </ul>
                 <partial name="_LoginPartial"/>
@@ -47,48 +50,48 @@
 @{
 // here we get the current page and if it is a page not having to do with finding bands/venues/etc we remove the bar from layout
 var path = HttpContextAccessor.HttpContext.Request.Path.ToString().ToLower();
-var showSelectionBar = !(path.Contains("/about") || 
-                            path.Contains("/identity") || 
-                            path.Contains("/home") || 
-                            path.Contains("/bands/landing")|| 
-                            path.Contains("/bands/details")||
-                            path.Contains("/venues/landing")||
-                            path.Contains("/venues/details")||
-                            path.Contains("/shows/landing")||
-                            path.Contains("/shows/details"));
+var showSelectionBar = !(path.Contains("/about") ||
+path.Contains("/identity") ||
+path.Contains("/home") ||
+path.Contains("/bands/landing")||
+path.Contains("/bands/details")||
+path.Contains("/venues/landing")||
+path.Contains("/venues/details")||
+path.Contains("/shows/landing")||
+path.Contains("/shows/details"));
 }
 
 @if (showSelectionBar)
 {
-    <nav class="selection-bar">
-        <div class="dropdown">
-            <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
-            <ul class="dropdown-menu" aria-labelledby="locationDropdown">
-                @foreach (var location in Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>())
-                {
-                    <li><a class="dropdown-item" href="?location=@location">@location</a></li>
-                }
-            </ul>
-        </div>
-        <div class="divider"></div>
-        <div class="dropdown">
-            <button class="selection dropdown-toggle" type="button" id="genreDropdown" data-bs-toggle="dropdown" aria-expanded="false">Genre</button>
-            <ul class="dropdown-menu" aria-labelledby="genreDropdown">
-                @foreach (var genre in Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>())
-                {
-                    <li><a class="dropdown-item" href="?genre=@genre">@genre</a></li>
-                }
-            </ul>
-        </div>
-        <div class="divider"></div>
-        <div class="dropdown">
-            <button class="selection dropdown-toggle" type="button" id="likedDropdown" data-bs-toggle="dropdown" aria-expanded="false">Liked</button>
-            <ul class="dropdown-menu" aria-labelledby="likedDropdown">
-                <li><a class="dropdown-item" href="?liked=true">Liked</a></li>
-                <li><a class="dropdown-item" href="?liked=false">Not Liked</a></li>
-            </ul>
-        </div>
-    </nav>
+<nav class="selection-bar">
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="locationDropdown" data-bs-toggle="dropdown" aria-expanded="false">Location</button>
+        <ul class="dropdown-menu" aria-labelledby="locationDropdown">
+            @foreach (var location in Enum.GetValues(typeof(LocationEnum)).Cast<LocationEnum>())
+            {
+            <li><a class="dropdown-item" href="?location=@location">@location</a></li>
+            }
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="genreDropdown" data-bs-toggle="dropdown" aria-expanded="false">Genre</button>
+        <ul class="dropdown-menu" aria-labelledby="genreDropdown">
+            @foreach (var genre in Enum.GetValues(typeof(GenreEnum)).Cast<GenreEnum>())
+            {
+            <li><a class="dropdown-item" href="?genre=@genre">@genre</a></li>
+            }
+        </ul>
+    </div>
+    <div class="divider"></div>
+    <div class="dropdown">
+        <button class="selection dropdown-toggle" type="button" id="likedDropdown" data-bs-toggle="dropdown" aria-expanded="false">Liked</button>
+        <ul class="dropdown-menu" aria-labelledby="likedDropdown">
+            <li><a class="dropdown-item" href="?liked=true">Liked</a></li>
+            <li><a class="dropdown-item" href="?liked=false">Not Liked</a></li>
+        </ul>
+    </div>
+</nav>
 }
 
 <nav class="bottom-nav">
