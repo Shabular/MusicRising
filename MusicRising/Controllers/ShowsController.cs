@@ -354,44 +354,12 @@ namespace MusicRising.Controllers
 
 
 
-        // GET: Shows/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            
-            
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var show = await _showsService.GetAll()
-                .Include(s => s.HeadLiner)
-                .Include(s => s.Venue)
-                .FirstOrDefaultAsync(s => s.ShowId == id);
-            
-            if (!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId))
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            
-            if (show == null)
-            {
-                return NotFound();
-            }
-
-            var userId = _userManager.GetUserId(User);
-            if (show.Venue.IdentityUserId != userId)
-            {
-                return Forbid();
-            }
-
-            return View(show);
-        }
+        
         
         [HttpGet]
         public async Task<IActionResult> Bid(string id)
         {
-            _debugHelper.DebugWriteLine("Biding get got showID" + id);
+            _debugHelper.DebugWriteLine("Biding get showID" + id);
             var show = await _showsService.GetAll()
                 .Include(s => s.HeadLiner)
                 .Include(s => s.Venue)
@@ -405,11 +373,7 @@ namespace MusicRising.Controllers
             string userID = _userManager.GetUserId(User);
             var bandId = show.BandId;
             var venueId = show.VenueId;
-
-            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            
             
 
             var showVM = new ShowVM
@@ -472,10 +436,7 @@ namespace MusicRising.Controllers
                 return NotFound("Show not found.");
             }
             
-            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            
 
             show.BandFee = bidAmount;
             show.Booked = false;
@@ -494,10 +455,7 @@ namespace MusicRising.Controllers
                 .Include(s => s.Venue)
                 .FirstOrDefaultAsync(s => s.ShowId == showId);
             
-            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            
             
             if (show == null)
             {
@@ -511,17 +469,47 @@ namespace MusicRising.Controllers
             return RedirectToAction(nameof(Landing));
         }
 
+        // GET: Shows/Delete/5
+        public async Task<IActionResult> Delete(string id)
+        {
+            
+            
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var show = await _showsService.GetAll()
+                .Include(s => s.HeadLiner)
+                .Include(s => s.Venue)
+                .FirstOrDefaultAsync(s => s.ShowId == id);
+            
+            if (!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            
+            if (show == null)
+            {
+                return NotFound();
+            }
+
+            var userId = _userManager.GetUserId(User);
+            if (show.Venue.IdentityUserId != userId)
+            {
+                return Forbid();
+            }
+
+            return View(show);
+        }
+        
+        
         // POST: Shows/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var show = await _showsService.GetAll().FirstOrDefaultAsync(s => s.ShowId == id);
-            
-            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), show.Venue.IdentityUserId)) ||  !AuthHelper.Authorize(_userManager.GetUserId(User), show.HeadLiner.IdentityUserId) )
-            {
-                return RedirectToAction(nameof(Index));
-            }
             
             if (show != null)
             {

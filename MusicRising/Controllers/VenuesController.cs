@@ -270,10 +270,7 @@ namespace MusicRising.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var venue = await _venuesService.GetAll().FirstOrDefaultAsync(v => v.VenueId == id);
-            if ((!AuthHelper.Authorize(_userManager.GetUserId(User), venue.IdentityUserId)))
-            {
-                return RedirectToAction(nameof(Index));
-            }
+           
             
             if (venue != null)
             {

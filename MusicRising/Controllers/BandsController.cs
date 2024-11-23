@@ -69,12 +69,9 @@ namespace MusicRising.Controllers
             var userBands = await _bandsService.GetAll()
                 .Where(b => b.IdentityUserId == userId)
                 .ToListAsync();
-
-            if (AuthHelper.Authorize(userId, userBands.FirstOrDefault().IdentityUserId))
-            {
+            
                 return View(userBands);
-            }
-                return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Bands/Details/5
@@ -308,7 +305,7 @@ namespace MusicRising.Controllers
                 return NotFound();
             }
 
-            return View(band);
+            return View(id);
         }
 
         // POST: Bands/Delete/5
@@ -318,10 +315,6 @@ namespace MusicRising.Controllers
         {
             var band = await _bandsService.GetAll().FirstOrDefaultAsync(b => b.BandId == id);
             
-            if (!AuthHelper.Authorize(_userManager.GetUserId(User), band.IdentityUserId))
-            {
-                return RedirectToAction(nameof(Index));
-            }
             
             if (band != null)
             {

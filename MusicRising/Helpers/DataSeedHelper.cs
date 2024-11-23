@@ -12,6 +12,8 @@ public class DataSeeder
     private readonly IVenuesService _venuesService;
     private readonly IShowsService _showsService;
 
+    private bool _debug = false;
+
     public DataSeeder(UserManager<IdentityUser> userManager, IBandsService bandsService, IVenuesService venuesService, IShowsService showsService)
     {
         _userManager = userManager;
@@ -46,6 +48,7 @@ public class DataSeeder
 
     public async Task SeedData()
     {
+        if (_debug) return;
         // Create users
         var user1 = new IdentityUser { UserName = "admin", Email = "admin@mr.com" };
         var user2 = new IdentityUser { UserName = "user2", Email = "user2@example.com" };
@@ -62,11 +65,11 @@ public class DataSeeder
             BandId = Guid.NewGuid().ToString(),
             IdentityUserId = user3.Id,
             BandName = "The Side Chicks",
-            Location = LocationEnum.NoordBrabant,
+            Location = LocationEnum.NoordHolland,
             BandPicture = "sidechicks.jpg",
             Details = "The side chicks is a punkrock cover band with a bit of own material",
             Genre = GenreEnum.Rock,
-            Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            Address = "Museumstraat 1, 1071 XX Amsterdam, Netherlands",
             Latitude = 37.4224764,
             Longitude = -122.0842499
         };
@@ -76,11 +79,11 @@ public class DataSeeder
             BandId = Guid.NewGuid().ToString(),
             IdentityUserId = user3.Id,
             BandName = "Bad Religion",
-            Location = LocationEnum.NoordBrabant,
+            Location = LocationEnum.NoordHolland,
             Details = "One of the most amazing punk rock bands, songs like punk rock song and ephipany realy do the charm",
             BandPicture = "badreligion.jpg",
             Genre = GenreEnum.Pop,
-            Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            Address = " Stationsweg 166A, 2161 AM Lisse, Netherlands",
             Latitude = 37.4224764,
             Longitude = -122.0842499
         };
@@ -92,9 +95,9 @@ public class DataSeeder
             BandName = "Imagine Dragons",
             BandPicture = "id.jpg",
             Details = "Do i realy need to tell who we are?",
-            Location = LocationEnum.Friesland,
+            Location = LocationEnum.ZuidHolland,
             Genre = GenreEnum.Classical,
-            Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            Address = "Erasmusbrug, 3072 MD Rotterdam, Netherlands",
             Latitude = 37.4224764,
             Longitude = -122.0842499
         };
@@ -109,11 +112,11 @@ public class DataSeeder
             VenueId = Guid.NewGuid().ToString(),
             IdentityUserId = user4.Id,
             VenueName = "De klomp",
-            Location = LocationEnum.Utrecht,
+            Location = LocationEnum.ZuidHolland,
             VenuePicture = "klomp.jpg",
             Details = "Small venue in Etten-Leur known for the wooden shoes on the ceiling",
             Genre = GenreEnum.Rock,
-            Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            Address = "Binnenhof 8a, 2513 AA Den Haag, Netherlands",
             Latitude = 37.4224764,
             Longitude = -122.0842499
         };
@@ -127,7 +130,7 @@ public class DataSeeder
             VenuePicture = "krisjes.jpg",
             Details = "A small bar with loads of fun",
             Genre = GenreEnum.Pop,
-            Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            Address = "Europalaan 1, 5171 KW Kaatsheuvel, Netherlands",
             Latitude = 37.4224764,
             Longitude = -122.0842499
         };
@@ -137,11 +140,11 @@ public class DataSeeder
             VenueId = Guid.NewGuid().ToString(),
             IdentityUserId = user4.Id,
             VenueName = "Zalinaz",
-            Location = LocationEnum.Zeeland,
+            Location = LocationEnum.Limburg,
             VenuePicture = "zalinaz.jpg",
             Details = "We still have a party sometimes......",
             Genre = GenreEnum.Pop,
-            Address = "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            Address = "Minderbroedersberg 4-6, 6211 LK Maastricht, Netherlands",
             Latitude = 37.4224764,
             Longitude = -122.0842499
         };

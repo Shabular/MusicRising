@@ -1,44 +1,87 @@
 ﻿@{
-    ViewData["Title"] = "About Us - Music Rising";
+    ViewData["Title"] = "Homepage - Music Rising";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <main class="card-view">
-    <div class="card">
-        
-        <div class="card-body">
-            <div class="card-title">About Music Rising</div>
-            <div class="card-text">
-                Music Rising is an innovative platform designed to bring more live music to the world by connecting bar owners, bands, and music lovers. This application allows bands to create a page where venues can book them. Once a show is accepted, it is instantly shared with the world on the shows overview.
+    <div class="container">
+        <div class="row">
+            <!-- Card 1 -->
+            <div class="col-md-4 mb-4">
+                <div class="card" style="height: 180px;">
+                    <div style="flex: 1;">
+                        <img class="card-img-top" src="~/Images/zalinaz.jpg" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5>Shows</h5>
+                        <a asp-page="/Shows/Index" class="btn btn-primary">View shows</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="col-md-4 mb-4">
+                <div class="card" style="height: 180px;">
+                    <div style="flex: 1;">
+                        <img class="card-img-top" src="~/Images/Band.jpg" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5>Bands</h5>
+                        <a asp-page="/Bands/Index" class="btn btn-primary">View bands</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="col-md-4 mb-4">
+                <div class="card" style="height: 180px;">
+                    <div style="flex: 1;">
+                        <img class="card-img-top" src="~/Images/Band.jpg" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5>Venues</h5>
+                        <a asp-page="/Venue/Index" class="btn btn-primary">View venues</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Card 4 -->
+            <div class="col-md-4 mb-4">
+                <div class="card" style="height: 180px;">
+                    <div style="flex: 1;">
+                        <img class="card-img-top" src="~/Images/Band.jpg" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5>Services</h5>
+                        <a asp-page="/Shows/Index" class="btn btn-primary">View services</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 5 -->
+            <div class="col-md-4 mb-4">
+                <div class="card" style="height: 180px;">
+                    <div style="flex: 1;">
+                        <img class="card-img-top" src="~/Images/Band.jpg" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5>Musicians</h5>
+                        <a asp-page="/Shows/Index" class="btn btn-primary">View musicians</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 6 -->
+            <div class="col-md-4 mb-4">
+                <div class="card" style="height: 180px;">
+                    <div style="flex: 1;">
+                        <img class="card-img-top" src="~/Images/Band.jpg" alt="Card image cap" style="height: 100%; width: 100%; object-fit: cover; border-radius: 0;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5>About</h5>
+                        <a asp-page="/Home/About" class="btn btn-primary">About</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="card">
-        
-        <div class="card-body">
-            <div class="card-title">About Wild Monk Creations</div>
-            <div class="card-text">
-                Wild Monk Creations, the company behind Music Rising, is dedicated to promoting live music. The company is founded by Bart Grootoonk, a drum enthusiast who loves creating drum covers and enjoys music. Bart's passion for music drives him to find ways to get more live music in the world.
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        
-        <div class="card-body">
-            <div class="card-title">Meet the Founder</div>
-            <div class="card-text">
-                Bart Grootoonk, the owner of Wild Monk Creations, is not only a lover of music but also an active contributor to the music community. In his free time, Bart creates drum covers and shares them with his audience. Check out his YouTube channel for more:
-                <br />
-                <a href="https://youtube.com/channel/UCVaT22XNzvevnR6XM" target="_blank">YouTube: Wild Monk Creations</a>
-                <br />
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/RF0bFvr9p7k?si=WtzwM653EtlRbUcS" frameborder="0" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/8GEL39tEZrw?si=oAhp58jRRJ8KBUzb" frameborder="0" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/3gjiHVZX95s?si=iy-SPCRPEBOiktRY" frameborder="0" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/20lybFy0CwY?si=10tT1Pq8s58W5FzS" frameborder="0" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-    <!-- Add more cards as needed -->
 </main>
 
 <footer class="footer">

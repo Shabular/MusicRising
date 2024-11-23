@@ -3,24 +3,33 @@ using Microsoft.EntityFrameworkCore;
 using MusicRising.Data;
 using MusicRising.Data.Services;
 using MusicRising.Helpers;
+using Microsoft.Extensions.Logging;
 
-DockerHelper.StartContainer("MariaDB");
 
+//This will one day create the docker, but for now we use a mariadb on a vm 
+//DockerHelper.StartContainer("MariaDB");
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("MariaDB") ??
                        throw new InvalidOperationException("Connection string 'MariaDB' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
-// Build the services to in the application
+// Add application services
 builder.Services.AddScoped<IShowsService, ShowsService>();
 builder.Services.AddScoped<IBandsService, BandsService>();
 builder.Services.AddScoped<IVenuesService, VenuesService>();
@@ -37,7 +46,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -50,7 +58,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Shows}/{action=Index}");
+    pattern: "{controller=Home}/{action=Index}");
 app.MapRazorPages();
 
 // Seed the database
@@ -73,6 +81,5 @@ void SeedDatabase(IHost app)
             var seeder = new DataSeeder(userManager, bandsService, venuesService, showsService);
             seeder.SeedData().Wait();
         }
-        
     }
 }
